@@ -39,17 +39,7 @@ namespace Ticket_Booking_Application.Controllers
             // calling repository method for performing creation operation in database
             request = await eventRepo.CreateEventAsync(request);
 
-            //mapping domain to dto
-            //var response = new EventDto
-            //{
-            //    EventName = request.EventName,
-            //    Description = request.Description,
-            //    EventDate = request.EventDate,
-            //    EventTime = request.EventTime,
-            //    Location = request.Location,
-            //    TicketPrice = request.TicketPrice,
-            //    TicketQuantity = request.TicketQuantity
-            //};
+            
 
             //returning back data to user
             return Ok(mapper.Map<EventDto>(request));
