@@ -1,0 +1,37 @@
+<div class="container">
+  <h1 class="mt-3">Events List</h1>
+  <div class="d-flex justify-content-end mt-3">
+      <a [routerLink]="['/create-event']" class="btn btn-primary mb-2"
+        >Add Event</a
+      >
+    </div>
+
+  <ng-container *ngIf="events$ | async as events">
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Description</th>
+          <th>Date</th>
+          <th>Time</th>
+          <th>Location</th>
+          <th>Ticket Price</th>
+          <th>Ticket Quantity</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let event of events">
+          <td>{{ event.eventName }}</td>
+          <td>{{ event.description }}</td>
+          <td>{{ event.eventDate }}</td>
+          <td>{{ event.eventTime }}</td>
+          <td>{{ event.location }}</td>
+          <td>{{ event.ticketPrice }}</td>
+          <td>{{ event.ticketQuantity }}</td>
+          <td><Button [routerLink]="['/booking']">Book Ticket</Button></td>
+        </tr>
+      </tbody>
+    </table>
+  </ng-container>
+</div>

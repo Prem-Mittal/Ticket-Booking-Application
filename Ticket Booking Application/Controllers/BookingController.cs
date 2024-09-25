@@ -25,9 +25,8 @@ namespace Ticket_Booking_Application.Controllers
         {
            
             var request=mapper.Map<Booking>(bookingCreationDto);
-
+            request.BookingTime = DateTime.UtcNow;
             request = await  bookingrepo.CreateBooking(request);
-
             return Ok(mapper.Map<BookingDto>(request));
         }
     }

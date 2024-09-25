@@ -9,6 +9,7 @@ import { RegisterUserComponent } from './components/auth/register-user/register-
 import { CreateEventComponent } from './components/pages/create-event/create-event.component';
 import { FormsModule } from '@angular/forms';
 import { NavbarComponent } from './components/core/header/navbar/navbar.component';
+import { ViewEventComponent } from './components/pages/view-event/view-event.component';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import { NavbarComponent } from './components/core/header/navbar/navbar.componen
     BookingComponent,
     RegisterUserComponent,
     CreateEventComponent,
-    NavbarComponent
+    NavbarComponent,
+    ViewEventComponent
   ],
   imports: [
     BrowserModule,

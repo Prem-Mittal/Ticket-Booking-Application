@@ -49,20 +49,6 @@ namespace Ticket_Booking_Application.Controllers
         public async Task<IActionResult> GetAllEvents() 
         {
             var events= await eventRepo.ShowEventsAsync();
-            //var response = new List<EventDto>();
-            //foreach ( var item in events)
-            //{
-            //    response.Add(new EventDto
-            //    {
-            //        EventName= item.EventName,
-            //        Description = item.Description,
-            //        EventDate = item.EventDate,
-            //        EventTime = item.EventTime,
-            //        Location = item.Location,
-            //        TicketPrice = item.TicketPrice,
-            //        TicketQuantity = item.TicketQuantity
-            //    });
-            //}
             return Ok(mapper.Map<List<EventDto>>(events));
         }
 
