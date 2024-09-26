@@ -10,6 +10,7 @@
         public string Location { get; set; }
         public int TicketPrice { get; set; }
         public int TicketQuantity { get; set; }
+        public int TicketsAvailable { get; set; }
 
     }
 }

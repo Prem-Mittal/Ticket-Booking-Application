@@ -26,6 +26,10 @@ namespace Ticket_Booking_Application.Controllers
             var request=mapper.Map<Booking>(bookingCreationDto);
             request.BookingTime = DateTime.UtcNow;
             request = await  bookingrepo.CreateBooking(request);
+            if (request == null)
+            {
+                return BadRequest("Not enough tickets available");
+            }
             return Ok(mapper.Map<BookingDto>(request));
         }
     }

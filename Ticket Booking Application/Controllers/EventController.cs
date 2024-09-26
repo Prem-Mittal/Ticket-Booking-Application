@@ -34,7 +34,8 @@ namespace Ticket_Booking_Application.Controllers
                 EventTime = time,
                 Location = eventCreationDto.Location,
                 TicketPrice = eventCreationDto.TicketPrice,
-                TicketQuantity = eventCreationDto.TicketQuantity
+                TicketQuantity = eventCreationDto.TicketQuantity,
+                TicketsAvailable = eventCreationDto.TicketQuantity
             };
             // calling repository method for performing creation operation in database
             request = await eventRepo.CreateEventAsync(request);
