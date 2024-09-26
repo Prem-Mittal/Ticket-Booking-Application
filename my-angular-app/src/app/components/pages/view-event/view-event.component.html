@@ -29,7 +29,10 @@
           <td>{{ event.location }}</td>
           <td>{{ event.ticketPrice }}</td>
           <td>{{ event.ticketQuantity }}</td>
-          <td><Button [routerLink]="['/booking']">Book Ticket</Button></td>
+          <td><Button
+            (click)="onButtonClick(event.id,event.ticketPrice)"
+             >
+             Book Ticket</Button></td>
         </tr>
       </tbody>
     </table>

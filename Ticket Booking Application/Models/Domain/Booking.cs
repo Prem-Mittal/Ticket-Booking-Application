@@ -1,11 +1,12 @@
 ﻿namespace Ticket_Booking_Application.Models.Domain
 {
     public class Booking
-    {
+    {   //Booking Model
         public Guid Id { get; set; }
         //public string UsersId { get; set; }
         public string Name { get; set; }
         public string PhoneNumber { get; set; }
+        public string Email { get; set; }
         public Guid EventId { get; set; }
         public int  NoOfTickets {  get; set; }
         public DateTime BookingTime { get; set; }

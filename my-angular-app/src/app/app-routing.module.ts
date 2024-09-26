@@ -14,7 +14,7 @@ const routes: Routes = [
     component:ViewEventComponent
   },
   {
-    path:'booking',
+    path:'booking/:eventId/:price',
     component:BookingComponent
   }
 ];

@@ -1,7 +1,7 @@
 ﻿namespace Ticket_Booking_Application.Models.Domain
 {
     public class Event
-    {
+    {   // Model for Event
         public Guid Id { get; set; }
         public string EventName { get; set; }
         public string Description { get; set; }

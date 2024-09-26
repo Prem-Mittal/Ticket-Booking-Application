@@ -7,10 +7,6 @@ namespace Ticket_Booking_Application.Repository.Implementation
     public class BookingRepo : IBookingRepo
     {
         private readonly ApplicationDbContext dbContext;
-
-
-
-
         public BookingRepo(ApplicationDbContext dbContext)
         {
             this.dbContext = dbContext;

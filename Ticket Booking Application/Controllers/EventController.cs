@@ -20,10 +20,10 @@ namespace Ticket_Booking_Application.Controllers
             this.mapper = mapper;
         }
         [HttpPost]
+        //Controller for Creating a Event
         public async Task<IActionResult> CreateEvent([FromBody] EventCreationDto eventCreationDto)
         {
             var date = DateOnly.Parse(eventCreationDto.EventDate);
-            
             var time = TimeSpan.Parse(eventCreationDto.EventTime); 
             //Mapping dto to domain
             var request = new Event
@@ -39,13 +39,12 @@ namespace Ticket_Booking_Application.Controllers
             // calling repository method for performing creation operation in database
             request = await eventRepo.CreateEventAsync(request);
 
-            
-
             //returning back data to user
             return Ok(mapper.Map<EventDto>(request));
         }
 
         [HttpGet]
+        //Controller for Creating all Event 
         public async Task<IActionResult> GetAllEvents() 
         {
             var events= await eventRepo.ShowEventsAsync();

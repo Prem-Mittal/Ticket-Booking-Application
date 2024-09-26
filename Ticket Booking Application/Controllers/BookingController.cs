@@ -23,7 +23,6 @@ namespace Ticket_Booking_Application.Controllers
         [HttpPost]
         public async Task<IActionResult> AddBooking(BookingCreationDto bookingCreationDto)
         {
-           
             var request=mapper.Map<Booking>(bookingCreationDto);
             request.BookingTime = DateTime.UtcNow;
             request = await  bookingrepo.CreateBooking(request);
