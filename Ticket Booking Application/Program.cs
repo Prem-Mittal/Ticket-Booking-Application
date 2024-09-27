@@ -1,9 +1,11 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Ticket_Booking_Application.Data;
 using Ticket_Booking_Application.Mappings;
+using Ticket_Booking_Application.Models.Domain;
 using Ticket_Booking_Application.Repository.Implementation;
 using Ticket_Booking_Application.Repository.Interfaces;
 
@@ -15,7 +17,9 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
+builder.Services.AddIdentity<Users, IdentityRole>()
+    .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddDefaultTokenProviders();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("TicketBookingAppConnectionString"));
@@ -24,6 +28,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
 builder.Services.AddScoped<IEventRepo, EventRepo>();
 builder.Services.AddScoped<IBookingRepo, BookingRepo>();
+builder.Services.AddScoped<ITokenRepo, TokenRepo>();
 //builder.Services.AddScoped<IUserRepo, UserRepo>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

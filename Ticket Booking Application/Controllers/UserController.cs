@@ -1,45 +1,72 @@
-﻿//using Microsoft.AspNetCore.Http;
-//using Microsoft.AspNetCore.Mvc;
-//using Ticket_Booking_Application.Models.Domain;
-//using Ticket_Booking_Application.Models.DTOs;
-//using Ticket_Booking_Application.Repository.Interfaces;
+﻿using Azure;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Ticket_Booking_Application.Models.Domain;
+using Ticket_Booking_Application.Models.DTOs;
+using Ticket_Booking_Application.Repository.Interfaces;
 
-//namespace Ticket_Booking_Application.Controllers
-//{
-//    [Route("api/[controller]")]
-//    [ApiController]
-//    public class UserController : ControllerBase
-//    {
-//        private readonly IUserRepo userRepo;
+namespace Ticket_Booking_Application.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class UserController : ControllerBase
+    {
+        private readonly UserManager<Users> userManager;
+        private readonly ITokenRepo tokenRepo;
 
-//        public UserController(IUserRepo userRepo)
-//        {
-//            this.userRepo = userRepo;
-//        }
+        public UserController(UserManager<Users> userManager, ITokenRepo tokenRepo)
+        {
+            this.userManager = userManager;
+            this.tokenRepo = tokenRepo;
+        }
 
-//        [HttpPost]
-//        public async Task<IActionResult> CreateUser([FromBody] UserCreationDto userCreationDto)
-//        {
-//            //map dto to domain
-//            var user = new Users
-//            {
-//                Name = userCreationDto.Name,
-//                PhoneNumber = userCreationDto.PhoneNumber,
-//                Email = userCreationDto.Email,
-//            };
+        [HttpPost]
+        public async Task<IActionResult> CreateUser([FromBody] UserCreationDto userCreationDto)
+        {
+            //map dto to domain
+            var user = new Users
+            {
+                FirstName = userCreationDto.FirstName,
+                LastName = userCreationDto.LastName,
+                UserName =  userCreationDto.UserName,
+                Address = userCreationDto.Address,
+                PhoneNumber = userCreationDto.PhoneNumber,
+            };
 
-//             user = await userRepo.CreateUserAsync(user);
+            var result = await userManager.CreateAsync(user,userCreationDto.Password);
 
-//            //map domain to dto
-//            var response = new UserDto
-//            {
-//                Name = user.Name,
-//                PhoneNumber = user.PhoneNumber,
-//                Email = user.Email,
-//            };
+            if (result.Succeeded)
+            {
+                return Ok(result);
+            }
+            else
+            {
+                return BadRequest(result.Errors);
+            }
+        }
 
-//            return Ok(response);
-//        }
+        [HttpPost]
+        [Route("Login")]
 
-//    }
-//}
+        public async Task<IActionResult> Login([FromBody] LoginRequestDto loginrequestDto)
+        {
+            var user = await userManager.FindByNameAsync(loginrequestDto.Username);
+            if (user != null)
+            {
+                var checkPasswordResult = await userManager.CheckPasswordAsync(user, loginrequestDto.Password);
+                if (checkPasswordResult)
+                {
+                        var jwtToken = tokenRepo.CreateJwtToken(user);
+                        var response = new LoginResponseDto
+                        {
+                            JwtToken = jwtToken,
+                        };
+                        return Ok(response); 
+                }
+            }
+            return BadRequest("User not registered");
+        }
+
+    }
+}

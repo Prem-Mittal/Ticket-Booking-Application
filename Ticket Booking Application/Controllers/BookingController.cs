@@ -28,7 +28,7 @@ namespace Ticket_Booking_Application.Controllers
             request = await  bookingrepo.CreateBooking(request);
             if (request == null)
             {
-                return BadRequest("Not enough tickets available");
+                return BadRequest("Not enough tickets available or amount is less than required");
             }
             return Ok(mapper.Map<BookingDto>(request));
         }
