@@ -2,7 +2,7 @@
 {
     public class UserCreationDto    //Dto for creating user
     { 
-        public string UserName { get; set; }          // Email address
+        public string UserName { get; set; }        // Email address
         public string Password { get; set; }       // Password for the account
         public string FirstName { get; set; }
         public string LastName { get; set; }

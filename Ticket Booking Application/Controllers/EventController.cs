@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Ticket_Booking_Application.Models.Domain;
@@ -20,6 +21,7 @@ namespace Ticket_Booking_Application.Controllers
             this.mapper = mapper;
         }
         [HttpPost]
+        [Authorize]
         //Controller for Creating a Event
         public async Task<IActionResult> CreateEvent([FromBody] EventCreationDto eventCreationDto)
         {

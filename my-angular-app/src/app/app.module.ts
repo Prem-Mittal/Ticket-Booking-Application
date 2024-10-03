@@ -10,6 +10,8 @@ import { CreateEventComponent } from './components/pages/create-event/create-eve
 import { FormsModule } from '@angular/forms';
 import { NavbarComponent } from './components/core/header/navbar/navbar.component';
 import { ViewEventComponent } from './components/pages/view-event/view-event.component';
+import { LoginComponent } from './components/auth/login/login.component';
+
 
 @NgModule({
   declarations: [
@@ -18,7 +20,9 @@ import { ViewEventComponent } from './components/pages/view-event/view-event.com
     RegisterUserComponent,
     CreateEventComponent,
     NavbarComponent,
-    ViewEventComponent
+    ViewEventComponent,
+    LoginComponent,
+    
   ],
   imports: [
     BrowserModule,

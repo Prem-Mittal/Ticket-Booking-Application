@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Ticket_Booking_Application.Models.Domain;
@@ -21,6 +22,7 @@ namespace Ticket_Booking_Application.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> AddBooking(BookingCreationDto bookingCreationDto)
         {
             var request=mapper.Map<Booking>(bookingCreationDto);

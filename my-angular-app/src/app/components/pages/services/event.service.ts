@@ -4,16 +4,16 @@ import { CreateEvent } from '../models/create_event.model';
 import { Observable } from 'rxjs';
 import { Event } from '../models/Event.model';
 import { CreateBooking } from '../models/create_booking.model';
+import { AfterEvent } from '../models/after_event.model';
 @Injectable({
   providedIn: 'root'
 })
 export class EventService {
 
-  constructor(private http:HttpClient) { 
-
-  }
-  addEvent(model:CreateEvent):Observable<void>{
-    return this.http.post<void>("http://localhost:5077/api/Event",model);
+  constructor(private http:HttpClient) { }
+  
+  addEvent(model:CreateEvent):Observable<AfterEvent>{
+    return this.http.post<AfterEvent>("http://localhost:5077/api/Event",model);
   }
 
   getEvent():Observable<Event[]>{
