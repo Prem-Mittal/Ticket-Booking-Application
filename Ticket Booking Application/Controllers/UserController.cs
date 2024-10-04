@@ -61,6 +61,7 @@ namespace Ticket_Booking_Application.Controllers
                         var response = new LoginResponseDto
                         {
                             JwtToken = jwtToken,
+                            Username = user.UserName
                         };
                         return Ok(response); 
                 }

@@ -11,6 +11,7 @@ import { FormsModule } from '@angular/forms';
 import { NavbarComponent } from './components/core/header/navbar/navbar.component';
 import { ViewEventComponent } from './components/pages/view-event/view-event.component';
 import { LoginComponent } from './components/auth/login/login.component';
+import { UserProfileComponent } from './components/auth/user-profile/user-profile.component';
 
 
 @NgModule({
@@ -22,6 +23,7 @@ import { LoginComponent } from './components/auth/login/login.component';
     NavbarComponent,
     ViewEventComponent,
     LoginComponent,
+    UserProfileComponent,
     
   ],
   imports: [

@@ -5,6 +5,7 @@ import { ViewEventComponent } from './components/pages/view-event/view-event.com
 import { BookingComponent } from './components/pages/booking/booking.component';
 import { RegisterUserComponent } from './components/auth/register-user/register-user.component';
 import { LoginComponent } from './components/auth/login/login.component';
+import { UserProfileComponent } from './components/auth/user-profile/user-profile.component';
 
 const routes: Routes = [
   {
@@ -30,6 +31,10 @@ const routes: Routes = [
   {
     path:'login',
     component:LoginComponent
+  },
+  {
+    path:'profile',
+    component:UserProfileComponent
   }
 ];
 
