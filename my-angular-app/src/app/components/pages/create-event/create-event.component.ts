@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 import { Component, OnDestroy } from '@angular/core';
 import { CreateEvent } from '../models/create_event.model';
 import { Subscription } from 'rxjs';
@@ -11,7 +12,7 @@ import { EventService } from '../services/event.service';
 export class CreateEventComponent implements OnDestroy {
   model: CreateEvent;
   private addEventSubscription?: Subscription
-  constructor(private eventService: EventService) {
+  constructor(private eventService: EventService, private router:Router) {
     this.model = {
       EventName: "",
       Description: "",
@@ -30,6 +31,7 @@ export class CreateEventComponent implements OnDestroy {
         console.log("This was successful");
       }
     });
+    this.router.navigateByUrl('/');
   }
 
   ngOnDestroy(): void {

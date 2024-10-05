@@ -3,7 +3,7 @@
     public class EventDto
     {
         public Guid Id { get; set; }
-
+        public string UsersId { get; set; }
         public string EventName { get; set; }
         public string Description { get; set; }
         public DateOnly EventDate { get; set; }

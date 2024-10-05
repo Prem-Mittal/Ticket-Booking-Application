@@ -60,8 +60,13 @@ namespace Ticket_Booking_Application.Controllers
                         var jwtToken = tokenRepo.CreateJwtToken(user);
                         var response = new LoginResponseDto
                         {
+                            Id = user.Id,
                             JwtToken = jwtToken,
-                            Username = user.UserName
+                            Username = user.UserName,
+                            FirstName = user.FirstName,
+                            LastName= user.LastName,
+                            PhoneNumber=user.PhoneNumber,
+                            Address = user.Address
                         };
                         return Ok(response); 
                 }

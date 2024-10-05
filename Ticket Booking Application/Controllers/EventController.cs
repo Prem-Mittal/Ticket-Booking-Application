@@ -30,6 +30,7 @@ namespace Ticket_Booking_Application.Controllers
             //Mapping dto to domain
             var request = new Event
             {
+                UsersId = eventCreationDto.UsersId,
                 EventName = eventCreationDto.EventName,
                 Description = eventCreationDto.Description,
                 EventDate = date,

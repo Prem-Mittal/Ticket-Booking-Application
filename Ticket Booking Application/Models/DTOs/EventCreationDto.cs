@@ -7,6 +7,8 @@ namespace Ticket_Booking_Application.Models.DTOs
         [Required]
         public string EventName { get; set; }
         [Required]
+        public string UsersId  { get; set; }
+        [Required]
         public string Description { get; set; }
         [Required]
         public string EventDate { get; set; }

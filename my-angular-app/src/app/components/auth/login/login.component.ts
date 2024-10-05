@@ -29,7 +29,12 @@ export class LoginComponent implements OnDestroy {
         console.log(response);
         this.cookieService.set('Authorization',`Bearer ${response.jwtToken}`,undefined,'/',undefined,true,'Strict');
         this.userService.setUser({
-          email:response.username
+          email:response.username,
+          firstName:response.firstName,
+          lastName:response.lastName,
+          address:response.Address,
+          phoneNumber:response.phoneNumber,
+          id:response.id
         });
         this.router.navigateByUrl('/');
       }

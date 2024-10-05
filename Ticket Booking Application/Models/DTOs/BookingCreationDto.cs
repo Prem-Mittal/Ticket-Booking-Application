@@ -4,7 +4,8 @@ namespace Ticket_Booking_Application.Models.DTOs
 {
     public class BookingCreationDto
     {
-        //public string UsersId { get; set; }
+        [Required]
+        public string UsersId { get; set; }
         [Required]
         public string Name { get; set; }
         [Required]

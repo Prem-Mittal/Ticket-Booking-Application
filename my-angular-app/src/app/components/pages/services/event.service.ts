@@ -1,3 +1,4 @@
+import { CookieService } from 'ngx-cookie-service';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CreateEvent } from '../models/create_event.model';
@@ -10,10 +11,14 @@ import { AfterEvent } from '../models/after_event.model';
 })
 export class EventService {
 
-  constructor(private http:HttpClient) { }
+  constructor(private http:HttpClient, private cookieService:CookieService) { }
   
   addEvent(model:CreateEvent):Observable<AfterEvent>{
-    return this.http.post<AfterEvent>("http://localhost:5077/api/Event",model);
+    return this.http.post<AfterEvent>("http://localhost:5077/api/Event",model,{
+      headers:{
+        'Authorization':this.cookieService.get('Authorization')
+      }
+    });
   }
 
   getEvent():Observable<Event[]>{

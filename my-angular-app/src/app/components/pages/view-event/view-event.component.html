@@ -1,10 +1,8 @@
 <div class="container">
   <h1 class="mt-3">Events List</h1>
   <div class="d-flex justify-content-end mt-3">
-      <a [routerLink]="['/create-event']" class="btn btn-primary mb-2"
-        >Add Event</a
-      >
-    </div>
+    <a (click)="createEventClick()" class="btn btn-primary mb-2">Add Event</a>
+  </div>
 
   <ng-container *ngIf="events$ | async as events">
     <table class="table table-bordered">
@@ -29,10 +27,11 @@
           <td>{{ event.location }}</td>
           <td>{{ event.ticketPrice }}</td>
           <td>{{ event.ticketQuantity }}</td>
-          <td><Button
-            (click)="onButtonClick(event.id,event.ticketPrice)"
-             >
-             Book Ticket</Button></td>
+          <td>
+            <Button (click)="onButtonClick(event.id, event.ticketPrice)">
+              Book Ticket</Button
+            >
+          </td>
         </tr>
       </tbody>
     </table>

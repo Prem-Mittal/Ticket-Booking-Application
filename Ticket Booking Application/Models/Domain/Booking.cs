@@ -3,7 +3,7 @@
     public class Booking
     {   //Booking Model
         public Guid Id { get; set; }
-        //public string UsersId { get; set; }
+        public string UsersId { get; set; }
         public string Name { get; set; }
         public string PhoneNumber { get; set; }
         public string Email { get; set; }
@@ -14,7 +14,7 @@
 
         //navigation Properties
         public Event Event { get; set; }
-        //public Users Users { get; set; }
+        public Users Users { get; set; }
 
 
 

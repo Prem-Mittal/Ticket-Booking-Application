@@ -24,23 +24,33 @@ export class UsersService {
 
   setUser(user: User):void{
     this.$user.next(user);
-    localStorage.setItem('user-email',user.email);
+    localStorage.setItem('user',JSON.stringify(user));
+    // localStorage.setItem('user-email',user.email);
+    // localStorage.setItem('first-name',user.firstName);
+    // localStorage.setItem('last-name',user.lastName);
+    // localStorage.setItem('address',user.address);
+    // localStorage.setItem('id',user.id);
+    // localStorage.setItem('phoneNumber',user.phoneNumber);
   }
 
+  //this method returns the user observable in this service class
   user():Observable<User|undefined>{
     return this.$user.asObservable();
   }
-
+  //this method returns the user from local storage
+  //it is created for extracting data whenever website is loaded and we have not logged in but user was already logged in
   getuser():User|undefined{
-    const email = localStorage.getItem('user-email');
-    if(email){
-      const user: User={
-        email:email
-      };
+    const userdetails = localStorage.getItem('user');
+    if(userdetails){
+      // const user: User={
+      //   email:email
+      // };
+      const user= JSON.parse(userdetails);
       return user;
     }
     return undefined;
   }
+
   logout():void{
     localStorage.clear();
     this.cookieService.delete('Authorization','/');

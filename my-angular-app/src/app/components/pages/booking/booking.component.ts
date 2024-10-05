@@ -3,6 +3,8 @@ import { CreateBooking } from '../models/create_booking.model';
 import { Subscription } from 'rxjs';
 import { EventService } from '../services/event.service';
 import { ActivatedRoute } from '@angular/router';
+import { User } from '../../auth/models/user.model';
+import { UsersService } from '../../auth/services/users.service';
 
 @Component({
   selector: 'app-booking',
@@ -10,21 +12,34 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./booking.component.css']
 })
 export class BookingComponent implements OnInit{
+  user?:User;
   model:CreateBooking;
   private addBookingSubscription ?: Subscription
   ticketPrice: number = 0; 
-  constructor(private bookingService: EventService, private route:ActivatedRoute) {
+  constructor(private bookingService: EventService, private route:ActivatedRoute,private userService:UsersService) {
     this.model = {
       name: "",
-      phoneNumber: "",
+      phoneNumber:"",
       eventId: "",
       email:"",
       noOfTickets: 1,
       bookingTime:"2024-09-25T14:30:00Z",
-      amount: 0 
+      amount: 0 ,
+      usersId:""
     }
   }
   ngOnInit(): void {
+    this.userService.user().subscribe({
+      next:(response)=>{
+        this.user=response;
+        if(this.user){
+          this.model.phoneNumber=this.user.phoneNumber;
+          this.model.email=this.user.email;
+          this.model.name= this.user.firstName + this.user.lastName;
+        }
+      }
+    })
+    //this.user=this.userService.getuser();
     const eventId=this.route.snapshot.paramMap.get('eventId');
     const ticketPrice= Number(this.route.snapshot.paramMap.get('price'));
     this.ticketPrice=ticketPrice;  

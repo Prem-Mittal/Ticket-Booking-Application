@@ -2,6 +2,7 @@ import { Component, OnDestroy } from '@angular/core';
 import { RegisterUser } from '../models/register_user.model';
 import { Subscription } from 'rxjs';
 import { UsersService } from '../services/users.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-register-user',
@@ -13,7 +14,7 @@ export class RegisterUserComponent implements OnDestroy {
   model: RegisterUser;
   private addUserSubscription?: Subscription
 
-  constructor(private userService: UsersService) {
+  constructor(private userService: UsersService,private router:Router) {
     this.model = {
       userName: "",
       password: "",
@@ -31,6 +32,7 @@ export class RegisterUserComponent implements OnDestroy {
         console.log("This was successful");
       }
     });
+    this.router.navigateByUrl('/');
   }
 
   ngOnDestroy(): void {

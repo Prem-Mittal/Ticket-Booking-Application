@@ -6,5 +6,6 @@ export interface CreateBooking {
     noOfTickets: number;
     bookingTime: string;
     amount: number;
+    usersId: string;
   }
   
