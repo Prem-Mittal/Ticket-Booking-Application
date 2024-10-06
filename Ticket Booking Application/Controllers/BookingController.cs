@@ -22,7 +22,7 @@ namespace Ticket_Booking_Application.Controllers
         }
 
         [HttpPost]
-        [Authorize]
+       
         public async Task<IActionResult> AddBooking(BookingCreationDto bookingCreationDto)
         {
             var request=mapper.Map<Booking>(bookingCreationDto);
@@ -33,6 +33,31 @@ namespace Ticket_Booking_Application.Controllers
                 return BadRequest("Not enough tickets available or amount is less than required");
             }
             return Ok(mapper.Map<BookingDto>(request));
+        }
+
+        [HttpGet]
+        [Route("{id}")]
+        public async Task<IActionResult> ShowBookingByUserId(string id)
+        {
+            var bookings = await bookingrepo.ShowBookingsbyUserId(id);
+            if (bookings == null || !bookings.Any())
+            {
+                return NotFound(new { Message = "No bookings found for this user." });
+            }
+            var bookingDtos = mapper.Map<IEnumerable<BookingDto>>(bookings);
+            return Ok(bookingDtos);
+        }
+
+        [HttpDelete]
+        [Route("{id:Guid}")]
+        public async Task<IActionResult> DeleteBooking([FromRoute]Guid id)
+        {
+            var respnse = await bookingrepo.DeleteBookingbyId(id);
+            if (respnse == null)
+            {
+                return NotFound();
+            }
+            return Ok(mapper.Map<BookingDto>(respnse));
         }
     }
 }

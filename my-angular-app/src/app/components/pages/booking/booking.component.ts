@@ -32,14 +32,14 @@ export class BookingComponent implements OnInit{
     this.userService.user().subscribe({
       next:(response)=>{
         this.user=response;
-        if(this.user){
-          this.model.phoneNumber=this.user.phoneNumber;
-          this.model.email=this.user.email;
-          this.model.name= this.user.firstName + this.user.lastName;
-        }
       }
     })
-    //this.user=this.userService.getuser();
+    this.user=this.userService.getuser();
+    if(this.user){
+      this.model.phoneNumber=this.user.phoneNumber;
+      this.model.email=this.user.email;
+      this.model.name= this.user.firstName + this.user.lastName;
+    }
     const eventId=this.route.snapshot.paramMap.get('eventId');
     const ticketPrice= Number(this.route.snapshot.paramMap.get('price'));
     this.ticketPrice=ticketPrice;  

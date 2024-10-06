@@ -74,5 +74,34 @@ namespace Ticket_Booking_Application.Controllers
             return BadRequest("User not registered");
         }
 
+        [HttpPut]
+        [Route("{id}")]
+        public async Task<IActionResult> UpdateUser(string id, UpdateUserDto updateUserDto)
+        {
+            var user= await userManager.FindByIdAsync(id);
+            if (user != null) 
+            {
+                if (updateUserDto.Address != user.Address)
+                    user.Address = updateUserDto.Address;
+                if (updateUserDto.FirstName != user.FirstName)
+                    user.FirstName = updateUserDto.FirstName;
+                if (updateUserDto.LastName != user.LastName)
+                    user.LastName = updateUserDto.LastName;
+                if (updateUserDto.PhoneNumber != user.PhoneNumber)
+                    user.PhoneNumber = updateUserDto.PhoneNumber;
+                var result= await userManager.UpdateAsync(user);
+                if (result.Succeeded)
+                {
+                    return Ok(user);
+                }
+                else
+                {
+                    // Return a bad request if the update failed
+                    return BadRequest(result.Errors);
+                }
+            }
+            return NotFound(new { Message = $"User with ID {id} not found." });
+        }
+
     }
 }

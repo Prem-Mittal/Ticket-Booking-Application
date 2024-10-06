@@ -22,9 +22,52 @@ namespace Ticket_Booking_Application.Repository.Implementation
             return request;
         }
 
+        public async Task<IEnumerable<Event?>> ShowEventsByUserId(string id)
+        {
+            return await dbContext.Events.Where(p=>p.UsersId== id).ToListAsync();   
+        }
+
         public async Task<IEnumerable<Event>> ShowEventsAsync()
         {
             return await dbContext.Events.ToListAsync();
+        }
+
+        public async Task<Event?> UpdateEventAsync(Guid id, Event request)
+        {
+            var existingevent = await dbContext.Events.FirstOrDefaultAsync(x => x.Id == id);
+            if (existingevent == null)
+            {
+                return null;
+            }
+            var previousTicketsAvailable = existingevent.TicketsAvailable;
+            var previousTicketsQuantity = existingevent.TicketQuantity;
+            existingevent.EventDate = request.EventDate;
+            existingevent.EventName = request.EventName;
+            existingevent.EventTime = request.EventTime;
+            existingevent.TicketPrice = request.TicketPrice;
+            existingevent.Description = request.Description;
+            existingevent.Location = request.Location;
+            existingevent.TicketQuantity = request.TicketQuantity;
+            existingevent.TicketsAvailable = previousTicketsAvailable + (request.TicketQuantity - previousTicketsQuantity);
+            await dbContext.SaveChangesAsync();
+            return existingevent;
+        }
+
+        public async Task<Event?> DeleteEvent(Guid id)
+        {
+            var existingevent=await dbContext.Events.FirstOrDefaultAsync(x => x.Id == id);
+            if (existingevent == null)
+            {
+                return null;
+            }
+            dbContext.Events.Remove(existingevent);
+            var relatedBookings=await dbContext.Bookings.Where(x => x.EventId == id).ToListAsync();
+            if (relatedBookings.Any())
+            {
+                dbContext.Bookings.RemoveRange(relatedBookings);
+            }
+            await dbContext.SaveChangesAsync();
+            return existingevent;
         }
     }
 }

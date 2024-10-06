@@ -14,7 +14,7 @@ namespace Ticket_Booking_Application.Mappings
             CreateMap<Booking, BookingDto>().ReverseMap();
             CreateMap<UserCreationDto, Users>().ReverseMap();
             CreateMap<Users, UserDto>().ReverseMap();
-            
+            CreateMap<Event, UpdateEventDto>().ReverseMap();
         }
     }
 }

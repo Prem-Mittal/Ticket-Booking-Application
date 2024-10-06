@@ -6,4 +6,5 @@ export interface CreateEvent{
     Location: string;
     TicketPrice:number;
     TicketQuantity:number;
+    UsersId:string;
 }
