@@ -1,0 +1,14 @@
+.user-profile {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  .user-details, .user-bookings, .user-events {
+    margin-bottom: 20px;
+  }
+  form div {
+    margin-bottom: 10px;
+  }
+  label {
+    display: inline-block;
+    width: 100px;
+  }

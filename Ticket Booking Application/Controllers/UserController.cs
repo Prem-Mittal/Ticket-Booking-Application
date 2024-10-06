@@ -1,4 +1,5 @@
-﻿using Azure;
+﻿using AutoMapper;
+using Azure;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -14,11 +15,13 @@ namespace Ticket_Booking_Application.Controllers
     {
         private readonly UserManager<Users> userManager;
         private readonly ITokenRepo tokenRepo;
+        private readonly IMapper mapper;
 
-        public UserController(UserManager<Users> userManager, ITokenRepo tokenRepo)
+        public UserController(UserManager<Users> userManager, ITokenRepo tokenRepo, IMapper mapper)
         {
             this.userManager = userManager;
             this.tokenRepo = tokenRepo;
+            this.mapper = mapper;
         }
 
         [HttpPost]
@@ -92,7 +95,7 @@ namespace Ticket_Booking_Application.Controllers
                 var result= await userManager.UpdateAsync(user);
                 if (result.Succeeded)
                 {
-                    return Ok(user);
+                    return Ok(mapper.Map<UserDto>(user));
                 }
                 else
                 {

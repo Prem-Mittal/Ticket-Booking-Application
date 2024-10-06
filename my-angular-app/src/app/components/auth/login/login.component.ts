@@ -32,7 +32,7 @@ export class LoginComponent implements OnDestroy {
           email:response.username,
           firstName:response.firstName,
           lastName:response.lastName,
-          address:response.Address,
+          address:response.address,
           phoneNumber:response.phoneNumber,
           id:response.id
         });

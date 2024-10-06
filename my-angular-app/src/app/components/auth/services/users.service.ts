@@ -6,6 +6,8 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { LoginUserModel } from '../models/login_user.model';
 import { LoginResponseModel } from '../models/login-response.model';
 import { User } from '../models/user.model';
+import { user_update_profile } from '../models/user-update.model';
+import { BookingModel } from '../models/booking.model';
 
 @Injectable({
   providedIn: 'root'
@@ -37,14 +39,12 @@ export class UsersService {
   user():Observable<User|undefined>{
     return this.$user.asObservable();
   }
+  
   //this method returns the user from local storage
   //it is created for extracting data whenever website is loaded and we have not logged in but user was already logged in
   getuser():User|undefined{
     const userdetails = localStorage.getItem('user');
     if(userdetails){
-      // const user: User={
-      //   email:email
-      // };
       const user= JSON.parse(userdetails);
       return user;
     }
@@ -56,4 +56,18 @@ export class UsersService {
     this.cookieService.delete('Authorization','/');
     this.$user.next(undefined);
   }
+
+  updateUser(id:string,model:user_update_profile):Observable<User>{
+    return this.http.put<User>(`http://localhost:5077/api/User/${id}`,model);
+  }
+
+  getBookingbyUserId(id:string):Observable<BookingModel[]>{
+    return this.http.get<BookingModel[]>(`http://localhost:5077/api/Booking/${id}`);
+  }
+
+  deleteBooking(id:string):Observable<BookingModel>{
+    return this.http.delete<BookingModel>(`http://localhost:5077/api/Booking/${id}`);
+  }
+
+  
 }

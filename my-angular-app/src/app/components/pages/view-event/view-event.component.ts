@@ -22,7 +22,6 @@ export class ViewEventComponent implements OnInit {
         this.user=response;
       }
     })
-    this.user=this.userService.getuser();
   }
   onButtonClick(eventId:string,ticketPrice:number ){
     if(this.user===undefined){

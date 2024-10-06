@@ -1,1 +1,99 @@
-<p>user-profile works!</p>
+<div class="user-profile">
+  <h2>User Profile</h2>
+
+  <div class="user-details">
+    <h3>User Details</h3>
+    <form (ngSubmit)="updateUserDetails()">
+      <div>
+        <label for="fname">First Name:</label>
+        <input id="fname" [(ngModel)]="model.firstName" name="fname" required />
+      </div>
+      <div>
+        <label for="lastname">Last Name:</label>
+        <input
+          id="lastname"
+          [(ngModel)]="model.lastName"
+          name="lastname"
+          required
+        />
+      </div>
+      <div>
+        <label for="Address">Address:</label>
+        <input
+          id="Address"
+          [(ngModel)]="model.address"
+          name="Address"
+          required
+        />
+      </div>
+      <div>
+        <label for="Phone">Phone:</label>
+        <input
+          id="Phone"
+          [(ngModel)]="model.phoneNumber"
+          name="Phone"
+          required
+        />
+      </div>
+      <button type="submit">Update Details</button>
+    </form>
+  </div>
+
+  <!-- <div class="user-bookings">
+    <h3>Your Bookings</h3>
+    <ul *ngIf="booking$ | async as bookings; else noBookings">
+      <li *ngFor="let booking of bookings">
+        {{ booking.id }} - {{ booking.bookingTime }}
+      </li>
+    </ul>
+    <ng-template #noBookings>
+      <p>No bookings available.</p>
+    </ng-template>
+  </div> -->
+
+  <ng-container *ngIf="booking$ | async as bookings; else noBookings">
+    <h3>Your Bookings</h3>
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Id</th>
+          <th>Name</th>
+          <th>Phone Number</th>
+          <th>Email</th>
+          <th>Amount</th>
+          <th>No of tickets</th>
+          <th>Booking Time</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let booking of bookings">
+          <td>{{ booking.id }}</td>
+          <td>{{ booking.name }}</td>
+          <td>{{ booking.phoneNumber }}</td>
+          <td>{{ booking.email }}</td>
+          <td>{{ booking.amount }}</td>
+          <td>{{ booking.noOfTickets }}</td>
+          <td>{{ booking.bookingTime | date }}</td>
+          <td>
+            <Button (click)="deleteBooking(booking.id)"> Cancel Booking</Button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </ng-container>
+  <ng-template #noBookings>
+    <p>No bookings available.</p>
+  </ng-template>
+
+  <!-- <div class="user-events">
+      <h3>Events You've Created</h3>
+      <ul>
+        <li *ngFor="let event of userEvents">
+          {{ event.name }} - {{ event.date | date }}
+        </li>
+      </ul>
+    </div> -->
+
+    
+</div>

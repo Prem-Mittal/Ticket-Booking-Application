@@ -5,5 +5,5 @@ export interface LoginResponseModel{
     lastName:string;
     phoneNumber:string;
     id:string;
-    Address:string;
+    address:string;
 }

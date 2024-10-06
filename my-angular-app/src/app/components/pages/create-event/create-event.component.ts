@@ -11,14 +11,14 @@ import { User } from '../../auth/models/user.model';
   templateUrl: './create-event.component.html',
   styleUrls: ['./create-event.component.css']
 })
-export class CreateEventComponent implements OnDestroy ,OnInit {
+export class CreateEventComponent implements OnDestroy, OnInit {
   model: CreateEvent;
-  user?:User;
+  user?: User;
   private addEventSubscription?: Subscription
-  constructor(private eventService: EventService, private router:Router, private userService: UsersService) {
+  constructor(private eventService: EventService, private router: Router, private userService: UsersService) {
     this.model = {
       EventName: "",
-      UsersId:"",
+      UsersId: "",
       Description: "",
       EventDate: "",
       EventTime: "",
@@ -28,21 +28,27 @@ export class CreateEventComponent implements OnDestroy ,OnInit {
     }
   }
   ngOnInit(): void {
-    this.user=this.userService.getuser();
-    if(this.user){
-      this.model.UsersId=this.user.id;
+    this.userService.user().subscribe(
+      {
+        next: (response) => {
+          this.user = response;
+        }
+      }
+    )
+    if (this.user) {
+      this.model.UsersId = this.user.id;
     }
   }
 
-  onFormSubmit(){
-    this.addEventSubscription =this.eventService.addEvent(this.model)
-    .subscribe({
-      next : (response)=>{
-        console.log("This was successful");
-        this.router.navigateByUrl('/');
-      }
-    });
-    
+  onFormSubmit() {
+    this.addEventSubscription = this.eventService.addEvent(this.model)
+      .subscribe({
+        next: (response) => {
+          console.log("This was successful");
+          this.router.navigateByUrl('/');
+        }
+      });
+
   }
 
   ngOnDestroy(): void {
