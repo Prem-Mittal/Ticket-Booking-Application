@@ -26,7 +26,11 @@ export class EventService {
   }
 
   createBooking(model:CreateBooking):Observable<void>{
-    return this.http.post<void>("http://localhost:5077/api/Booking",model);
+    return this.http.post<void>("http://localhost:5077/api/Booking",model,{
+      headers:{
+        'Authorization':this.cookieService.get('Authorization')
+      }
+    });
   }
 
 }

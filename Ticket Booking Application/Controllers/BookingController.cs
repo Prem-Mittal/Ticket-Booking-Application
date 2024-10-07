@@ -22,7 +22,7 @@ namespace Ticket_Booking_Application.Controllers
         }
 
         [HttpPost]
-       
+        [Authorize]
         public async Task<IActionResult> AddBooking(BookingCreationDto bookingCreationDto)
         {
             var request=mapper.Map<Booking>(bookingCreationDto);
@@ -37,6 +37,7 @@ namespace Ticket_Booking_Application.Controllers
 
         [HttpGet]
         [Route("{id}")]
+        [Authorize]
         public async Task<IActionResult> ShowBookingByUserId(string id)
         {
             var bookings = await bookingrepo.ShowBookingsbyUserId(id);
@@ -50,6 +51,7 @@ namespace Ticket_Booking_Application.Controllers
 
         [HttpDelete]
         [Route("{id:Guid}")]
+        [Authorize]
         public async Task<IActionResult> DeleteBooking([FromRoute]Guid id)
         {
             var respnse = await bookingrepo.DeleteBookingbyId(id);

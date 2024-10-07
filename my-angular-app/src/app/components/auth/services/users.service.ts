@@ -8,7 +8,7 @@ import { LoginResponseModel } from '../models/login-response.model';
 import { User } from '../models/user.model';
 import { user_update_profile } from '../models/user-update.model';
 import { BookingModel } from '../models/booking.model';
-
+import { Event } from '../../pages/models/Event.model';
 @Injectable({
   providedIn: 'root'
 })
@@ -58,16 +58,42 @@ export class UsersService {
   }
 
   updateUser(id:string,model:user_update_profile):Observable<User>{
-    return this.http.put<User>(`http://localhost:5077/api/User/${id}`,model);
+    return this.http.put<User>(`http://localhost:5077/api/User/${id}`,model,{
+      headers:{
+        'Authorization':this.cookieService.get('Authorization')
+      }
+    });
   }
 
   getBookingbyUserId(id:string):Observable<BookingModel[]>{
-    return this.http.get<BookingModel[]>(`http://localhost:5077/api/Booking/${id}`);
+    return this.http.get<BookingModel[]>(`http://localhost:5077/api/Booking/${id}`,{
+      headers:{
+        'Authorization':this.cookieService.get('Authorization')
+      }
+    });
   }
 
   deleteBooking(id:string):Observable<BookingModel>{
-    return this.http.delete<BookingModel>(`http://localhost:5077/api/Booking/${id}`);
+    return this.http.delete<BookingModel>(`http://localhost:5077/api/Booking/${id}`,{
+      headers:{
+        'Authorization':this.cookieService.get('Authorization')
+      }
+    });
   }
 
-  
+  getEventsbyUserId(id:string):Observable<Event[]>{
+    return this.http.get<Event[]>(`http://localhost:5077/api/Event/${id}`,{
+      headers:{
+        'Authorization':this.cookieService.get('Authorization')
+      }
+    });
+  }
+
+  deleteEvent(id:string):Observable<Event>{
+    return this.http.delete<Event>(`http://localhost:5077/api/Event/${id}`,{
+      headers:{
+        'Authorization':this.cookieService.get('Authorization')
+      }
+    });
+  }
 }

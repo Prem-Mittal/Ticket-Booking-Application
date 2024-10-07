@@ -1,60 +1,36 @@
-<div class="user-profile">
-  <h2>User Profile</h2>
+<div class="user-profile container mt-5">
+  <h1 class="text-center mb-4">User Profile</h1>
 
-  <div class="user-details">
+  <div class="user-details mb-5">
     <h3>User Details</h3>
-    <form (ngSubmit)="updateUserDetails()">
-      <div>
-        <label for="fname">First Name:</label>
-        <input id="fname" [(ngModel)]="model.firstName" name="fname" required />
+    <form (ngSubmit)="updateUserDetails()" class="row g-3">
+      <div class="col-md-6">
+        <label for="fname" class="form-label">First Name:</label>
+        <input id="fname" [(ngModel)]="model.firstName" name="fname" required class="form-control" />
       </div>
-      <div>
-        <label for="lastname">Last Name:</label>
-        <input
-          id="lastname"
-          [(ngModel)]="model.lastName"
-          name="lastname"
-          required
-        />
+      <div class="col-md-6">
+        <label for="lastname" class="form-label">Last Name:</label>
+        <input id="lastname" [(ngModel)]="model.lastName" name="lastname" required class="form-control" />
       </div>
-      <div>
-        <label for="Address">Address:</label>
-        <input
-          id="Address"
-          [(ngModel)]="model.address"
-          name="Address"
-          required
-        />
+      <div class="col-md-6">
+        <label for="Address" class="form-label">Address:</label>
+        <input id="Address" [(ngModel)]="model.address" name="Address" required class="form-control" />
       </div>
-      <div>
-        <label for="Phone">Phone:</label>
-        <input
-          id="Phone"
-          [(ngModel)]="model.phoneNumber"
-          name="Phone"
-          required
-        />
+      <div class="col-md-6">
+        <label for="Phone" class="form-label">Phone:</label>
+        <input id="Phone" [(ngModel)]="model.phoneNumber" name="Phone" required class="form-control" />
       </div>
-      <button type="submit">Update Details</button>
+      <div class="col-12">
+        <button type="submit" class="btn btn-primary">Update Details</button>
+      </div>
     </form>
   </div>
 
-  <!-- <div class="user-bookings">
-    <h3>Your Bookings</h3>
-    <ul *ngIf="booking$ | async as bookings; else noBookings">
-      <li *ngFor="let booking of bookings">
-        {{ booking.id }} - {{ booking.bookingTime }}
-      </li>
-    </ul>
-    <ng-template #noBookings>
-      <p>No bookings available.</p>
-    </ng-template>
-  </div> -->
-
+  <!-- User Bookings Section -->
   <ng-container *ngIf="booking$ | async as bookings; else noBookings">
     <h3>Your Bookings</h3>
-    <table class="table table-bordered">
-      <thead>
+    <table class="table table-hover table-bordered">
+      <thead class="table-dark">
         <tr>
           <th>Id</th>
           <th>Name</th>
@@ -76,24 +52,43 @@
           <td>{{ booking.noOfTickets }}</td>
           <td>{{ booking.bookingTime | date }}</td>
           <td>
-            <Button (click)="deleteBooking(booking.id)"> Cancel Booking</Button>
+            <button (click)="deleteBooking(booking.id)" class="btn btn-danger btn-sm">Cancel Booking</button>
           </td>
         </tr>
       </tbody>
     </table>
   </ng-container>
   <ng-template #noBookings>
-    <p>No bookings available.</p>
+    <p class="text-muted">No bookings available.</p>
   </ng-template>
 
-  <!-- <div class="user-events">
-      <h3>Events You've Created</h3>
-      <ul>
-        <li *ngFor="let event of userEvents">
-          {{ event.name }} - {{ event.date | date }}
-        </li>
-      </ul>
-    </div> -->
-
-    
+  <!-- User Events Section -->
+  <ng-container *ngIf="event$ | async as events; else noEvents">
+    <h3>Your Events</h3>
+    <table class="table table-hover table-bordered">
+      <thead class="table-dark">
+        <tr>
+          <th>Event Name</th>
+          <th>Description</th>
+          <th>Date</th>
+          <th>Location</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let event of events">
+          <td>{{ event.eventName }}</td>
+          <td>{{ event.description }}</td>
+          <td>{{ event.eventDate | date }}</td>
+          <td>{{ event.location }}</td>
+          <td>
+            <button (click)="deleteEvent(event.id)" class="btn btn-danger btn-sm">Cancel Event</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </ng-container>
+  <ng-template #noEvents>
+    <p class="text-muted">No events available.</p>
+  </ng-template>
 </div>

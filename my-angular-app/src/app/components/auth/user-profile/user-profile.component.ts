@@ -4,7 +4,7 @@ import { UsersService } from '../services/users.service';
 import { user_update_profile } from '../models/user-update.model';
 import { Observable, Subscription } from 'rxjs';
 import { BookingModel } from '../models/booking.model';
-
+import { Event } from '../../pages/models/Event.model';
 @Component({
   selector: 'app-user-profile',
   templateUrl: './user-profile.component.html',
@@ -14,6 +14,7 @@ export class UserProfileComponent implements OnInit, OnDestroy {
   user?:User;
   model:user_update_profile;
   booking$?: Observable<BookingModel[]>;
+  event$?:Observable<Event[]>
   private updateUserSubscription?: Subscription
   
   constructor(private userService:UsersService){
@@ -36,7 +37,8 @@ export class UserProfileComponent implements OnInit, OnDestroy {
       this.model.lastName=this.user.lastName;
       this.model.address=this.user.address;
       this.model.phoneNumber=this.user.phoneNumber;
-      this.booking$=this.userService.getBookingbyUserId(this.user?.id);
+      this.booking$=this.userService.getBookingbyUserId(this.user.id);
+      this.event$=this.userService.getEventsbyUserId(this.user.id);
     }
   }
 
@@ -72,9 +74,27 @@ export class UserProfileComponent implements OnInit, OnDestroy {
     });
   }
 
+  deleteEvent(eventId:string){
+    this.userService.deleteEvent(eventId).subscribe({
+      next: (response) => {
+        console.log("Event deleted successfully", response);
+        this.reloadEvents();  
+      },
+      error: (err) => {
+        console.error("Error deleting booking", err);
+      }
+    });
+  }
+
   reloadBookings() {
     if(this.user){
       this.booking$ = this.userService.getBookingbyUserId(this.user?.id);
+    }
+  }
+
+  reloadEvents(){
+    if(this.user){
+      this.event$ = this.userService.getEventsbyUserId(this.user?.id);
     }
   }
 

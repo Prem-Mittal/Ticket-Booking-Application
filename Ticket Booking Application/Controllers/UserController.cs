@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Azure;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -79,6 +80,7 @@ namespace Ticket_Booking_Application.Controllers
 
         [HttpPut]
         [Route("{id}")]
+        [Authorize]
         public async Task<IActionResult> UpdateUser(string id, UpdateUserDto updateUserDto)
         {
             var user= await userManager.FindByIdAsync(id);
