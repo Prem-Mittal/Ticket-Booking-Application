@@ -5,7 +5,6 @@ import { CreateEvent } from '../models/create_event.model';
 import { Observable } from 'rxjs';
 import { Event } from '../models/Event.model';
 import { CreateBooking } from '../models/create_booking.model';
-import { AfterEvent } from '../models/after_event.model';
 @Injectable({
   providedIn: 'root'
 })
@@ -13,8 +12,8 @@ export class EventService {
 
   constructor(private http:HttpClient, private cookieService:CookieService) { }
   
-  addEvent(model:CreateEvent):Observable<AfterEvent>{
-    return this.http.post<AfterEvent>("http://localhost:5077/api/Event",model,{
+  addEvent(model:CreateEvent):Observable<Event>{
+    return this.http.post<Event>("http://localhost:5077/api/Event/Create",model,{
       headers:{
         'Authorization':this.cookieService.get('Authorization')
       }
@@ -22,11 +21,11 @@ export class EventService {
   }
 
   getEvent():Observable<Event[]>{
-    return this.http.get<Event[]>("http://localhost:5077/api/Event");
+    return this.http.get<Event[]>("http://localhost:5077/api/Event/GetAllEvents");
   }
 
   createBooking(model:CreateBooking):Observable<void>{
-    return this.http.post<void>("http://localhost:5077/api/Booking",model,{
+    return this.http.post<void>("http://localhost:5077/api/Booking/AddBooking",model,{
       headers:{
         'Authorization':this.cookieService.get('Authorization')
       }

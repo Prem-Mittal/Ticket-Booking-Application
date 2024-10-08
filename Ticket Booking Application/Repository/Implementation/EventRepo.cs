@@ -41,6 +41,7 @@ namespace Ticket_Booking_Application.Repository.Implementation
             }
             var previousTicketsAvailable = existingevent.TicketsAvailable;
             var previousTicketsQuantity = existingevent.TicketQuantity;
+
             existingevent.EventDate = request.EventDate;
             existingevent.EventName = request.EventName;
             existingevent.EventTime = request.EventTime;
@@ -48,6 +49,7 @@ namespace Ticket_Booking_Application.Repository.Implementation
             existingevent.Description = request.Description;
             existingevent.Location = request.Location;
             existingevent.TicketQuantity = request.TicketQuantity;
+            //Increasing Number of Tickets Availability in Event Table
             existingevent.TicketsAvailable = previousTicketsAvailable + (request.TicketQuantity - previousTicketsQuantity);
             await dbContext.SaveChangesAsync();
             return existingevent;
@@ -61,6 +63,8 @@ namespace Ticket_Booking_Application.Repository.Implementation
                 return null;
             }
             dbContext.Events.Remove(existingevent);
+
+            //delete related bookings of the event
             var relatedBookings=await dbContext.Bookings.Where(x => x.EventId == id).ToListAsync();
             if (relatedBookings.Any())
             {

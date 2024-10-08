@@ -25,38 +25,30 @@
       </div>
     </form>
   </div>
-
+  <div class="mb-5">
+    <button type="button" class="btn btn-primary" (click)="navigateToPasswordUpdate()">Update Password</button>
+  </div>
   <!-- User Bookings Section -->
   <ng-container *ngIf="booking$ | async as bookings; else noBookings">
     <h3>Your Bookings</h3>
-    <table class="table table-hover table-bordered">
-      <thead class="table-dark">
-        <tr>
-          <th>Id</th>
-          <th>Name</th>
-          <th>Phone Number</th>
-          <th>Email</th>
-          <th>Amount</th>
-          <th>No of tickets</th>
-          <th>Booking Time</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let booking of bookings">
-          <td>{{ booking.id }}</td>
-          <td>{{ booking.name }}</td>
-          <td>{{ booking.phoneNumber }}</td>
-          <td>{{ booking.email }}</td>
-          <td>{{ booking.amount }}</td>
-          <td>{{ booking.noOfTickets }}</td>
-          <td>{{ booking.bookingTime | date }}</td>
-          <td>
-            <button (click)="deleteBooking(booking.id)" class="btn btn-danger btn-sm">Cancel Booking</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="row row-cols-1 row-cols-md-2 g-4">
+      <div class="col" *ngFor="let booking of bookings">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">{{ booking.name }}</h5>
+            <p class="card-text">
+              <strong>Id:</strong> {{ booking.id }}<br />
+              <strong>Phone Number:</strong> {{ booking.phoneNumber }}<br />
+              <strong>Email:</strong> {{ booking.email }}<br />
+              <strong>Amount:</strong> {{ booking.amount }}<br />
+              <strong>No of Tickets:</strong> {{ booking.noOfTickets }}<br />
+              <strong>Booking Time:</strong> {{ booking.bookingTime | date }}
+            </p>
+            <button (click)="deleteBooking(booking.id)" class="btn btn-danger">Cancel Booking</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </ng-container>
   <ng-template #noBookings>
     <p class="text-muted">No bookings available.</p>
@@ -65,28 +57,22 @@
   <!-- User Events Section -->
   <ng-container *ngIf="event$ | async as events; else noEvents">
     <h3>Your Events</h3>
-    <table class="table table-hover table-bordered">
-      <thead class="table-dark">
-        <tr>
-          <th>Event Name</th>
-          <th>Description</th>
-          <th>Date</th>
-          <th>Location</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let event of events">
-          <td>{{ event.eventName }}</td>
-          <td>{{ event.description }}</td>
-          <td>{{ event.eventDate | date }}</td>
-          <td>{{ event.location }}</td>
-          <td>
-            <button (click)="deleteEvent(event.id)" class="btn btn-danger btn-sm">Cancel Event</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="row row-cols-1 row-cols-md-2 g-4">
+      <div class="col" *ngFor="let event of events">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">{{ event.eventName }}</h5>
+            <p class="card-text">
+              <strong>Description:</strong> {{ event.description }}<br />
+              <strong>Date:</strong> {{ event.eventDate | date }}<br />
+              <strong>Location:</strong> {{ event.location }}
+            </p>
+            <button (click)="deleteEvent(event.id)" class="btn btn-danger mx-1">Cancel Event</button>
+            <button (click)="modifyEvent(event,event.id)" class="btn btn-danger">Update Event</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </ng-container>
   <ng-template #noEvents>
     <p class="text-muted">No events available.</p>

@@ -21,25 +21,28 @@ export class LoginComponent implements OnDestroy {
     };
   }
 
-  onFormSubmit(){
-    this.loginUserSubscription =this.userService.loginUser(this.model)
+  onFormSubmit() {
+    this.loginUserSubscription = this.userService.loginUser(this.model)
     .subscribe({
-      next : (response)=>{
-        console.log("This was successful");
-        console.log(response);
-        this.cookieService.set('Authorization',`Bearer ${response.jwtToken}`,undefined,'/',undefined,true,'Strict');
-        this.userService.setUser({
-          email:response.username,
-          firstName:response.firstName,
-          lastName:response.lastName,
-          address:response.address,
-          phoneNumber:response.phoneNumber,
-          id:response.id
-        });
-        this.router.navigateByUrl('/');
-      }
+        next: (response) => {
+            console.log("This was successful");
+            this.cookieService.set('Authorization', `Bearer ${response.result.jwtToken}`, undefined, '/', undefined, true, 'Strict');
+            this.userService.setUser({
+                email: response.result.username,
+                firstName: response.result.firstName,
+                lastName: response.result.lastName,
+                address: response.result.address,
+                phoneNumber: response.result.phoneNumber,
+                id: response.result.id
+            });
+            this.router.navigateByUrl('/');
+        },
+        error: (err) => {
+            console.error("Login failed", err);
+        }
     });
-  }
+}
+
 
   ngOnDestroy(): void {
     this.loginUserSubscription?.unsubscribe();

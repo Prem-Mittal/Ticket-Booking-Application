@@ -1,7 +1,9 @@
 <div class="container mt-5">
   <h2 class="text-center mb-4">User Registration Form</h2>
-  <form class="col-md-6 mx-auto" #form="ngForm" (ngSubmit)="onFormSubmit()">
-    <div class="form-group my-2">
+  <form class="col-md-6 mx-auto" #form="ngForm" (ngSubmit)="onFormSubmit()" novalidate>
+    
+    <!-- First Name -->
+    <div class="form-group my-3">
       <label for="firstName">First Name</label>
       <input
         type="text"
@@ -12,9 +14,13 @@
         [(ngModel)]="model.firstName"
         required
       />
+      <div *ngIf="form.submitted && !model.firstName" class="invalid-feedback">
+        First name is required.
+      </div>
     </div>
 
-    <div class="form-group my-2">
+    <!-- Last Name -->
+    <div class="form-group my-3">
       <label for="lastName">Last Name</label>
       <input
         type="text"
@@ -25,9 +31,13 @@
         [(ngModel)]="model.lastName"
         required
       />
+      <div *ngIf="form.submitted && !model.lastName" class="invalid-feedback">
+        Last name is required.
+      </div>
     </div>
 
-    <div class="form-group my-2">
+    <!-- Email -->
+    <div class="form-group my-3">
       <label for="email">Email</label>
       <input
         type="email"
@@ -38,9 +48,13 @@
         placeholder="Enter your email"
         required
       />
+      <div *ngIf="form.submitted && !model.userName" class="invalid-feedback">
+        A valid email is required.
+      </div>
     </div>
 
-    <div class="form-group my-2">
+    <!-- Password -->
+    <div class="form-group my-3">
       <label for="password">Password</label>
       <input
         type="password"
@@ -51,9 +65,13 @@
         [(ngModel)]="model.password"
         required
       />
+      <div *ngIf="form.submitted && !model.password" class="invalid-feedback">
+        Password is required.
+      </div>
     </div>
 
-    <div class="form-group my-2">
+    <!-- Address -->
+    <div class="form-group my-3">
       <label for="address">Address</label>
       <input
         type="text"
@@ -64,9 +82,13 @@
         [(ngModel)]="model.address"
         required
       />
+      <div *ngIf="form.submitted && !model.address" class="invalid-feedback">
+        Address is required.
+      </div>
     </div>
 
-    <div class="form-group my-2">
+    <!-- Phone Number -->
+    <div class="form-group my-3">
       <label for="phoneNumber">Phone Number</label>
       <input
         type="tel"
@@ -77,9 +99,13 @@
         [(ngModel)]="model.phoneNumber"
         required
       />
+      <div *ngIf="form.submitted && !model.phoneNumber" class="invalid-feedback">
+        Phone number is required.
+      </div>
     </div>
 
-    <button type="submit" class="btn btn-primary btn-block my-2">
+    <!-- Submit Button -->
+    <button type="submit" class="btn btn-primary btn-block my-3">
       Register
     </button>
   </form>

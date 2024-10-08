@@ -1,9 +1,12 @@
 export interface LoginResponseModel{
-    jwtToken:string;
-    username:string;
-    firstName:string;
-    lastName:string;
-    phoneNumber:string;
-    id:string;
-    address:string;
+    message:string;
+    result:{
+        jwtToken:string;
+        username:string;
+        firstName:string;
+        lastName:string;
+        phoneNumber:string;
+        id:string;
+        address:string;
+    } 
 }

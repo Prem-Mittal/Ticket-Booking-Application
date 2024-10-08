@@ -1,4 +1,16 @@
-<div class="pt-3 px-3">
-  <app-navbar></app-navbar>
-  <router-outlet></router-outlet>
+<div class="d-flex flex-column min-vh-100">
+  <!-- Navbar Component -->
+  <header class="bg-dark text-white">
+    <app-navbar></app-navbar>
+  </header>
+
+  <!-- Main Content Area -->
+  <main class="container my-4 flex-grow-1">
+    <router-outlet></router-outlet>
+  </main>
+
+  <!-- Footer (Sticky at the bottom) -->
+  <!-- <footer class="bg-dark text-white pt-1 text-center">
+    <p>&copy; 2024 Your Company. All rights reserved.</p>
+  </footer> -->
 </div>

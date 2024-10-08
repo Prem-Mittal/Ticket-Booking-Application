@@ -32,6 +32,10 @@ builder.Services.Configure<IdentityOptions>(options =>
     }
 );
 
+builder.Services.AddControllersWithViews()
+    .AddNewtonsoftJson(options =>
+    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+);
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
@@ -42,7 +46,6 @@ builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
 builder.Services.AddScoped<IEventRepo, EventRepo>();
 builder.Services.AddScoped<IBookingRepo, BookingRepo>();
 builder.Services.AddScoped<ITokenRepo, TokenRepo>();
-//builder.Services.AddScoped<IUserRepo, UserRepo>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>

@@ -1,11 +1,11 @@
 <div class="container mt-5">
   <h2 class="text-center mb-4">Login</h2>
-  <form class="col-md-4 mx-auto" #form="ngForm" (ngSubmit)="onFormSubmit()">
-    <div class="form-group">
+  <form class="col-md-8 col-lg-6 mx-auto" #form="ngForm" (ngSubmit)="onFormSubmit()">
+    <div class="form-group my-1">
       <label for="username">Username</label>
       <input
         type="text"
-        class="form-control"
+        class="form-control my-1"
         id="username"
         name="username"
         [(ngModel)]="model.username"
@@ -17,7 +17,7 @@
       <label for="password">Password</label>
       <input
         type="password"
-        class="form-control"
+        class="form-control my-1"
         id="password"
         name="password"
         [(ngModel)]="model.password"
@@ -25,6 +25,9 @@
         required
       />
     </div>
-    <button type="submit" class="btn btn-primary btn-block">Login</button>
+    <button type="submit" class="btn btn-primary btn-block my-2">Login</button>
   </form>
+  <div class="text-center mt-3">
+    <p>Don't have an account? <a routerLink="/register">Register here</a></p>
+  </div>
 </div>

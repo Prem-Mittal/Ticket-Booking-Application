@@ -6,6 +6,7 @@ export interface Event {
     eventTime: string;
     location: string;
     ticketPrice: number;
-    ticketQuantity: number;
+    ticketQuantity:number;
+    ticketsAvailable: number;
   }
   

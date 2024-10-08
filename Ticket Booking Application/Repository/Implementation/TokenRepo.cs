@@ -15,7 +15,7 @@ namespace Ticket_Booking_Application.Repository.Implementation
         {
             this.configuration = configuration;
         }
-        public string CreateJwtToken(Users user) // Change IdentityUser to your custom Users class
+        public string CreateJwtToken(Users user) 
         {
             var claims = new List<Claim>
             {

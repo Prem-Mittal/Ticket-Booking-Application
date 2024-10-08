@@ -25,15 +25,20 @@ export class RegisterUserComponent implements OnDestroy {
     };
   }
 
-  onFormSubmit(){
-    this.addUserSubscription =this.userService.registerUser(this.model)
-    .subscribe({
-      next : (response)=>{
-        console.log("This was successful");
+  onFormSubmit() {
+    this.addUserSubscription = this.userService.registerUser(this.model).subscribe({
+      next: (response) => {
+        console.log(response);
+        if (response === "User Created Successfully") {
+          this.router.navigateByUrl('/');
+        }
+      },
+      error: (err) => {
+        console.error("An unexpected error occurred:", err);
       }
     });
-    this.router.navigateByUrl('/');
   }
+  
 
   ngOnDestroy(): void {
     this.addUserSubscription?.unsubscribe();

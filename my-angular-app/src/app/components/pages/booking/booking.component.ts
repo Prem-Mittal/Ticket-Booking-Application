@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CreateBooking } from '../models/create_booking.model';
 import { Subscription } from 'rxjs';
 import { EventService } from '../services/event.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { User } from '../../auth/models/user.model';
 import { UsersService } from '../../auth/services/users.service';
 
@@ -16,7 +16,7 @@ export class BookingComponent implements OnInit{
   model:CreateBooking;
   private addBookingSubscription ?: Subscription
   ticketPrice: number = 0; 
-  constructor(private bookingService: EventService, private route:ActivatedRoute,private userService:UsersService) {
+  constructor(private bookingService: EventService, private router:Router,private route:ActivatedRoute,private userService:UsersService) {
     this.model = {
       name: "",
       phoneNumber:"",
@@ -40,8 +40,10 @@ export class BookingComponent implements OnInit{
       this.model.name= this.user.firstName + this.user.lastName;
       this.model.usersId=this.user.id;
     }
+    //fetching result from another component
     const eventId=this.route.snapshot.paramMap.get('eventId');
     const ticketPrice= Number(this.route.snapshot.paramMap.get('price'));
+    
     this.ticketPrice=ticketPrice;  
     if (eventId) {
       this.model.eventId = eventId;
@@ -60,6 +62,7 @@ export class BookingComponent implements OnInit{
     .subscribe({
       next : (response)=>{
         console.log("This was successful");
+        this.router.navigateByUrl('/');
       }
     });
   }

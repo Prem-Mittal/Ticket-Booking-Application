@@ -195,7 +195,7 @@ namespace Ticket_Booking_Application.Migrations
 
                     b.HasIndex("UsersId");
 
-                    b.ToTable("Bookings");
+                    b.ToTable("Bookings", (string)null);
                 });
 
             modelBuilder.Entity("Ticket_Booking_Application.Models.Domain.Event", b =>
@@ -237,7 +237,7 @@ namespace Ticket_Booking_Application.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Events");
+                    b.ToTable("Events", (string)null);
                 });
 
             modelBuilder.Entity("Ticket_Booking_Application.Models.Domain.Users", b =>

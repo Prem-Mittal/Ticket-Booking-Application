@@ -5,6 +5,8 @@ import { user_update_profile } from '../models/user-update.model';
 import { Observable, Subscription } from 'rxjs';
 import { BookingModel } from '../models/booking.model';
 import { Event } from '../../pages/models/Event.model';
+import { Router } from '@angular/router';
+import { EventsService } from '../services/events.service';
 @Component({
   selector: 'app-user-profile',
   templateUrl: './user-profile.component.html',
@@ -17,7 +19,7 @@ export class UserProfileComponent implements OnInit, OnDestroy {
   event$?:Observable<Event[]>
   private updateUserSubscription?: Subscription
   
-  constructor(private userService:UsersService){
+  constructor(private userService:UsersService, private router: Router, private eventService:EventsService){
     this.model={
       firstName:"",
       lastName:"",
@@ -86,6 +88,19 @@ export class UserProfileComponent implements OnInit, OnDestroy {
     });
   }
 
+  modifyEvent(event:Event,id:string){
+    this.eventService.setEvent({
+      eventName: event.eventName,
+      description: event.description,
+      eventDate: event.eventDate,
+      eventTime: event.eventTime,
+      location: event.location,
+      ticketPrice: event.ticketPrice,
+      ticketQuantity: event.ticketQuantity
+    });
+    this.router.navigate(['/update-event',id]);
+  }
+
   reloadBookings() {
     if(this.user){
       this.booking$ = this.userService.getBookingbyUserId(this.user?.id);
@@ -96,6 +111,10 @@ export class UserProfileComponent implements OnInit, OnDestroy {
     if(this.user){
       this.event$ = this.userService.getEventsbyUserId(this.user?.id);
     }
+  }
+
+  navigateToPasswordUpdate(){
+    this.router.navigate(['/update-password', this.user?.id]);
   }
 
   ngOnDestroy(): void {

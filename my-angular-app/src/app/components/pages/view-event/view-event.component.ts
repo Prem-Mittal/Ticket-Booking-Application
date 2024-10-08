@@ -23,6 +23,7 @@ export class ViewEventComponent implements OnInit {
       }
     })
   }
+  //function for booking a ticket
   onButtonClick(eventId:string,ticketPrice:number ){
     if(this.user===undefined){
       this.router.navigateByUrl('login');
@@ -30,7 +31,7 @@ export class ViewEventComponent implements OnInit {
       this.router.navigate(['/booking',eventId,ticketPrice]);
     }
   }
-
+  // function for adding event 
   createEventClick(){
     if(this.user===undefined){
       this.router.navigateByUrl('login');

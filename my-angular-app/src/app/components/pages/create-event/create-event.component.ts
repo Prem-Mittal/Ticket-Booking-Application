@@ -48,7 +48,6 @@ export class CreateEventComponent implements OnDestroy, OnInit {
           this.router.navigateByUrl('/');
         }
       });
-
   }
 
   ngOnDestroy(): void {

@@ -1,7 +1,5 @@
 ﻿using AutoMapper;
-using Azure;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Ticket_Booking_Application.Models.Domain;
@@ -17,17 +15,26 @@ namespace Ticket_Booking_Application.Controllers
         private readonly UserManager<Users> userManager;
         private readonly ITokenRepo tokenRepo;
         private readonly IMapper mapper;
+        
 
         public UserController(UserManager<Users> userManager, ITokenRepo tokenRepo, IMapper mapper)
         {
             this.userManager = userManager;
             this.tokenRepo = tokenRepo;
             this.mapper = mapper;
+            
         }
 
+        //Controller for registering the user
         [HttpPost]
+        [Route("Register")]
         public async Task<IActionResult> CreateUser([FromBody] UserCreationDto userCreationDto)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             //map dto to domain
             var user = new Users
             {
@@ -42,7 +49,7 @@ namespace Ticket_Booking_Application.Controllers
 
             if (result.Succeeded)
             {
-                return Ok(result);
+                return Ok("User Crested Successfully");
             }
             else
             {
@@ -50,11 +57,15 @@ namespace Ticket_Booking_Application.Controllers
             }
         }
 
+        //Controller for logging in the user
         [HttpPost]
         [Route("Login")]
-
         public async Task<IActionResult> Login([FromBody] LoginRequestDto loginrequestDto)
         {
+            if (!ModelState.IsValid)
+            {
+                return (BadRequest(ModelState));
+            }
             var user = await userManager.FindByNameAsync(loginrequestDto.Username);
             if (user != null)
             {
@@ -72,17 +83,26 @@ namespace Ticket_Booking_Application.Controllers
                             PhoneNumber=user.PhoneNumber,
                             Address = user.Address
                         };
-                        return Ok(response); 
+                        return Ok(new
+                        {
+                            Message = "User Logged In",
+                            Result = response
+                        });
                 }
             }
             return BadRequest("User not registered");
         }
 
+        //Controller for Updating the user
         [HttpPut]
-        [Route("{id}")]
+        [Route("Update/{id}")]
         [Authorize]
         public async Task<IActionResult> UpdateUser(string id, UpdateUserDto updateUserDto)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             var user= await userManager.FindByIdAsync(id);
             if (user != null) 
             {
@@ -97,7 +117,11 @@ namespace Ticket_Booking_Application.Controllers
                 var result= await userManager.UpdateAsync(user);
                 if (result.Succeeded)
                 {
-                    return Ok(mapper.Map<UserDto>(user));
+                    return Ok(new
+                    {
+                        Message = "User Updated",
+                        Result = mapper.Map<UserDto>(user)
+                    });
                 }
                 else
                 {
@@ -107,6 +131,41 @@ namespace Ticket_Booking_Application.Controllers
             }
             return NotFound(new { Message = $"User with ID {id} not found." });
         }
+
+        [HttpPost]
+        [Route("ChangePassword/{id}")]
+        [Authorize]
+        public async Task<IActionResult> ChangePassword(string id, ChangePasswordDto model)
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                // Get the currently logged-in user
+                var user = await userManager.FindByIdAsync(id);
+
+                if (user == null)
+                {
+                    return NotFound("User not found.");
+                }
+
+                // Change the password using the UserManager service
+                var result = await userManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
+                result = await userManager.UpdateAsync(user);
+                if (result.Succeeded)
+                {
+                    return Ok("Password changed successfully.");
+                }
+
+                // If the operation fails, return the errors
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError("", error.Description);
+                }
+
+                return BadRequest(ModelState);
+            }
 
     }
 }

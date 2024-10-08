@@ -12,6 +12,8 @@ import { NavbarComponent } from './components/core/header/navbar/navbar.componen
 import { ViewEventComponent } from './components/pages/view-event/view-event.component';
 import { LoginComponent } from './components/auth/login/login.component';
 import { UserProfileComponent } from './components/auth/user-profile/user-profile.component';
+import { UpdateEventComponent } from './components/auth/update-event/update-event.component';
+import { PasswordUpdateComponent } from './components/auth/password-update/password-update.component';
 
 
 @NgModule({
@@ -24,6 +26,8 @@ import { UserProfileComponent } from './components/auth/user-profile/user-profil
     ViewEventComponent,
     LoginComponent,
     UserProfileComponent,
+    UpdateEventComponent,
+    PasswordUpdateComponent,
     
   ],
   imports: [

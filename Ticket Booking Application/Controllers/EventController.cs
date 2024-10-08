@@ -22,6 +22,7 @@ namespace Ticket_Booking_Application.Controllers
         }
         [HttpPost]
         [Authorize]
+        [Route("Create")]
         //Controller for Creating a Event
         public async Task<IActionResult> CreateEvent([FromBody] EventCreationDto eventCreationDto)
         {
@@ -36,6 +37,7 @@ namespace Ticket_Booking_Application.Controllers
                 EventDate = date,
                 EventTime = time,
                 Location = eventCreationDto.Location,
+
                 TicketPrice = eventCreationDto.TicketPrice,
                 TicketQuantity = eventCreationDto.TicketQuantity,
                 TicketsAvailable = eventCreationDto.TicketQuantity
@@ -48,7 +50,8 @@ namespace Ticket_Booking_Application.Controllers
         }
 
         [HttpGet]
-        //Controller for Creating all Event 
+        [Route("GetAllEvents")]
+        //Controller for Displaying all Event 
         public async Task<IActionResult> GetAllEvents() 
         {
             var events= await eventRepo.ShowEventsAsync();
@@ -56,19 +59,29 @@ namespace Ticket_Booking_Application.Controllers
         }
 
         [HttpGet]
-        [Route("{id}")]
         [Authorize]
+        [Route("GetEventByUserId/{id}")]
+        //Controller for Displaying all Event by UserID
         public async Task<IActionResult> GetEventbyUserId([FromRoute] string id)
         {
             var events = await eventRepo.ShowEventsByUserId(id);
+            if (events == null || !events.Any())
+            {
+                return NotFound(new { Message = "No bookings found for this user." });
+            }
             return Ok(mapper.Map<List<EventDto>>(events));
         }
 
         [HttpPut]
-        [Route("{id:Guid}")]
         [Authorize]
+        [Route("UpdateEvent/{id:Guid}")]
+        //Controller for Updating Event
         public async Task<IActionResult> UpdateEvent([FromBody] UpdateEventDto updateEventDto, [FromRoute] Guid id)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             var date = DateOnly.Parse(updateEventDto.EventDate);
             var time = TimeSpan.Parse(updateEventDto.EventTime);
             //Mapping dto to domain
@@ -83,18 +96,23 @@ namespace Ticket_Booking_Application.Controllers
                 TicketQuantity = updateEventDto.TicketQuantity,
             };
             request = await eventRepo.UpdateEventAsync(id, request);
+            if (request == null)
+            {
+                return NotFound("Requested Event for updation was not Found");
+            }
             return Ok(mapper.Map<EventDto>(request));
         }
 
         [HttpDelete]
-        [Route("{id:Guid}")]
         [Authorize]
+        [Route("DeleteEvent/{id:Guid}")]
+        //Controller for Deleting an Event
         public async Task<IActionResult> DeleteEvent([FromRoute] Guid id)
         {
             var req = await eventRepo.DeleteEvent(id);
             if (req == null)
             {
-                return NotFound();
+                return NotFound("Requested Event for deletion was Not Found");
             }
             return Ok(mapper.Map<Event>(req));
         }

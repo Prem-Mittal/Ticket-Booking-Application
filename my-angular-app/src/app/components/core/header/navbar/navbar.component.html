@@ -1,6 +1,11 @@
-<nav class="navbar navbar-expand-lg bg-body-tertiary ">
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary py-3">
   <div class="container">
-    <a class="navbar-brand" href="#" >Ticket Booking App</a>
+    <!-- Brand / Logo -->
+    <a class="navbar-brand fw-bold" href="#">
+      <i class="fas fa-ticket-alt"></i> Ticket Booking App
+    </a>
+
+    <!-- Toggler for Mobile View -->
     <button
       class="navbar-toggler"
       type="button"
@@ -10,30 +15,36 @@
       aria-expanded="false"
       aria-label="Toggle navigation"
     >
-    <span class="navbar-toggler-icon"></span>
+      <span class="navbar-toggler-icon"></span>
     </button>
+
+    <!-- Navbar Links -->
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0 mx-2">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <!-- Home Link -->
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="#">Home</a>
+          <a class="nav-link fw-bold" aria-current="page" routerLink="/" routerLinkActive="active">Home</a>
         </li>
-        <ng-container *ngIf="user===undefined;else showLogout">
+
+        <!-- Conditional Links for User Not Logged In -->
+        <ng-container *ngIf="user === undefined; else showLogout">
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" routerLink="register" >Register</a>
+            <a class="nav-link fw-bold" routerLink="register" routerLinkActive="active">Register</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" routerLink="login">Login</a>
+            <a class="nav-link fw-bold" routerLink="login" routerLinkActive="active">Login</a>
           </li>
-        </ng-container> 
+        </ng-container>
+
+        <!-- Conditional Links for Logged In User -->
         <ng-template #showLogout>
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" routerLink="profile">Profile</a>
+            <a class="nav-link fw-bold" routerLink="profile" routerLinkActive="active">Profile</a>
           </li>
           <li class="nav-item">
-            <button class="nav-link active" (click)="onLogout()" aria-current="page">Logout</button>
+            <a class="nav-link fw-bold" href="#" (click)="onLogout()">Logout</a>
           </li>
         </ng-template>
-        
       </ul>
     </div>
   </div>
