@@ -13,7 +13,8 @@ import { Subscription } from 'rxjs';
 export class UpdateEventComponent implements OnInit {
    event?:UpdateEventModel
    model:UpdateEventModel;
-   eventId?: string ;
+   eventId?: string;
+   userId?:string;
    private updateEventSubscription?:Subscription;
    constructor(private eventService:EventsService, private userService:UsersService,private route:ActivatedRoute, private router:Router){
     this.model={
@@ -42,23 +43,24 @@ export class UpdateEventComponent implements OnInit {
       this.model.ticketQuantity=this.event.ticketQuantity;
     }
     const eventId=this.route.snapshot.paramMap.get('id');
-    if(eventId){
+    const userId=this.route.snapshot.paramMap.get('userId');
+    if(eventId && userId){
       this.eventId=eventId;
+      this.userId=userId;
     }
   }
    
   updateEvent(){
-    if(this.eventId){
-      this.updateEventSubscription = this.userService.updateEvent(this.eventId,this.model)
+    if(this.eventId && this.userId){
+      this.updateEventSubscription = this.userService.updateEvent(this.eventId,this.model,this.userId)
       .subscribe({
         next : (response)=>{
-          console.log("This was successful");
+          console.log(response.Message);
           localStorage.removeItem('Event');
           this.router.navigateByUrl('profile')
         }
       });
       this.eventService.setEvent(this.model); 
-      
     } 
   }
 

@@ -55,23 +55,30 @@ namespace Ticket_Booking_Application.Repository.Implementation
             return existingevent;
         }
 
-        public async Task<Event?> DeleteEvent(Guid id)
+        public async Task<(Event createdEvent, string message, bool isSuccess)> DeleteEvent(Guid id, string userId)
         {
             var existingevent=await dbContext.Events.FirstOrDefaultAsync(x => x.Id == id);
             if (existingevent == null)
             {
-                return null;
+                return (null, "Event does not exist", false);
             }
-            dbContext.Events.Remove(existingevent);
-
-            //delete related bookings of the event
-            var relatedBookings=await dbContext.Bookings.Where(x => x.EventId == id).ToListAsync();
-            if (relatedBookings.Any())
+            if (existingevent.UsersId == userId)
+            { 
+                dbContext.Events.Remove(existingevent);
+                //delete related bookings of the event
+                var relatedBookings = await dbContext.Bookings.Where(x => x.EventId == id).ToListAsync();
+                if (relatedBookings.Any())
+                {
+                    dbContext.Bookings.RemoveRange(relatedBookings);
+                }
+                await dbContext.SaveChangesAsync();
+                return (existingevent, "Event Deleted Successfully", true);
+            }
+            else
             {
-                dbContext.Bookings.RemoveRange(relatedBookings);
+                return (null,"Trying to access Unauthorized Event",false);
             }
-            await dbContext.SaveChangesAsync();
-            return existingevent;
+            
         }
     }
 }

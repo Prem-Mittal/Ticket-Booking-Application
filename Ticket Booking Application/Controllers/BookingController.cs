@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using Ticket_Booking_Application.Models.Domain;
 using Ticket_Booking_Application.Models.DTOs;
 using Ticket_Booking_Application.Repository.Interfaces;
@@ -14,11 +15,13 @@ namespace Ticket_Booking_Application.Controllers
     {
         private readonly IBookingRepo bookingrepo;
         private readonly IMapper mapper;
+        private readonly IHttpContextAccessor httpContextAccessor;
 
-        public BookingController(IBookingRepo bookingrepo, IMapper mapper)
+        public BookingController(IBookingRepo bookingrepo, IMapper mapper, IHttpContextAccessor httpContextAccessor)
         {
             this.bookingrepo = bookingrepo;
             this.mapper = mapper;
+            this.httpContextAccessor = httpContextAccessor;
         }
 
         [HttpPost]
@@ -31,14 +34,28 @@ namespace Ticket_Booking_Application.Controllers
             {
                 return BadRequest(ModelState);
             }
-            var request=mapper.Map<Booking>(bookingCreationDto);
-            request.BookingTime = DateTime.UtcNow;
-            var (createdBooking, message, isSuccess) = await  bookingrepo.CreateBooking(request);
-            if (!isSuccess)
+            var userId= httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if(userId==bookingCreationDto.UsersId)
             {
-                return BadRequest(message); // Return the error message from the repository
+                var request = mapper.Map<Booking>(bookingCreationDto);
+                request.BookingTime = DateTime.UtcNow;
+                var (createdBooking, message, isSuccess) = await bookingrepo.CreateBooking(request);
+                if (!isSuccess)
+                {
+                    return BadRequest(new { Message = message }); // Return the error message from the repository
+                }
+                return Ok(new
+                {
+                    Message = "Booking created successfully",
+                    Booking = mapper.Map<BookingDto>(createdBooking)
+                });
+
             }
-            return Ok(mapper.Map<BookingDto>(createdBooking));
+            else
+            {
+                return BadRequest(new { Message = "Trying to make booking for someone else" });
+            }
+            
         }
 
         [HttpGet]        
@@ -47,13 +64,26 @@ namespace Ticket_Booking_Application.Controllers
         //Controller for displaying bookings of specific user
         public async Task<IActionResult> ShowBookingByUserId(string id)
         {
-            var bookings = await bookingrepo.ShowBookingsbyUserId(id);
-            if (bookings == null || !bookings.Any())
+            var userId = httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userId == id)
             {
-                return NotFound(new { Message = "No bookings found for this user." });
+                var bookings = await bookingrepo.ShowBookingsbyUserId(id);
+                if (bookings == null || !bookings.Any())
+                {
+                    return NotFound(new { Message = "No bookings found for this user." });
+                }
+                var bookingDtos = mapper.Map<IEnumerable<BookingDto>>(bookings);
+                return Ok(new
+                {
+                    Message = "Bookings retrieved successfully",
+                    Bookings = bookingDtos
+                });
             }
-            var bookingDtos = mapper.Map<IEnumerable<BookingDto>>(bookings);
-            return Ok(bookingDtos);
+            else
+            {
+                return BadRequest(new { Message = "Trying to look booking for someone else" });
+            }
+            
         }
 
         [HttpDelete]
@@ -62,12 +92,17 @@ namespace Ticket_Booking_Application.Controllers
         //Controller for deleting bookings of specific user
         public async Task<IActionResult> DeleteBooking([FromRoute]Guid id)
         {
-            var respnse = await bookingrepo.DeleteBookingbyId(id);
-            if (respnse == null)
+            var userId = httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var (response,message,isSuccess) = await bookingrepo.DeleteBookingbyId(id,userId);
+            if (!isSuccess)
             {
-                return NotFound("Booking Not Found");
+                return BadRequest(new { Message = message }); // Return the error message from the repository
             }
-            return Ok(mapper.Map<BookingDto>(respnse));
+            return Ok(new
+            {
+                Message = message,
+                Booking = mapper.Map<BookingDto>(response)
+            });
         }
     }
 }

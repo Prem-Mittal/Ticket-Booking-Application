@@ -61,8 +61,11 @@ export class BookingComponent implements OnInit{
     this.addBookingSubscription =this.bookingService.createBooking(this.model)
     .subscribe({
       next : (response)=>{
-        console.log("This was successful");
+        console.log(response.message);
         this.router.navigateByUrl('/');
+      },
+      error:(error)=>{
+        console.log(error);
       }
     });
   }

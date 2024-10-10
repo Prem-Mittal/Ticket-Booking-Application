@@ -5,6 +5,7 @@ import { CreateEvent } from '../models/create_event.model';
 import { Observable } from 'rxjs';
 import { Event } from '../models/Event.model';
 import { CreateBooking } from '../models/create_booking.model';
+import { BookingModel } from '../../auth/models/booking.model';
 @Injectable({
   providedIn: 'root'
 })
@@ -12,20 +13,23 @@ export class EventService {
 
   constructor(private http:HttpClient, private cookieService:CookieService) { }
   
-  addEvent(model:CreateEvent):Observable<Event>{
-    return this.http.post<Event>("http://localhost:5077/api/Event/Create",model,{
+  //method for adding the event
+  addEvent(model:CreateEvent):Observable<{message:string,event:Event}>{
+    return this.http.post<{message:string,event:Event}>("http://localhost:5077/api/Event/Create",model,{
       headers:{
         'Authorization':this.cookieService.get('Authorization')
       }
     });
   }
 
-  getEvent():Observable<Event[]>{
-    return this.http.get<Event[]>("http://localhost:5077/api/Event/GetAllEvents");
+  //method for getting all bookings
+  getEvent():Observable<{message:string,event:Event[]}>{
+    return this.http.get<{message:string,event:Event[]}>("http://localhost:5077/api/Event/GetAllEvents");
   }
 
-  createBooking(model:CreateBooking):Observable<void>{
-    return this.http.post<void>("http://localhost:5077/api/Booking/AddBooking",model,{
+  //method for creating  booking
+  createBooking(model:CreateBooking):Observable<{message: string; booking: BookingModel}>{
+    return this.http.post<{message: string; booking: BookingModel}>("http://localhost:5077/api/Booking/AddBooking",model,{
       headers:{
         'Authorization':this.cookieService.get('Authorization')
       }

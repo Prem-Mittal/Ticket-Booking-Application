@@ -19,7 +19,8 @@ namespace Ticket_Booking_Application.Repository.Implementation
         {
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Email, user.UserName)
+                new Claim(ClaimTypes.Email, user.UserName),
+                new Claim(ClaimTypes.NameIdentifier,user.Id)
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:key"]));

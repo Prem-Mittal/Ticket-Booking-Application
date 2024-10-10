@@ -47,20 +47,31 @@ namespace Ticket_Booking_Application.Repository.Implementation
             return (null, "Unexpected error occured", false);
         }
 
-        public async Task<Booking> DeleteBookingbyId(Guid id)
+        public async Task<(Booking booking, string message, bool isSuccess)> DeleteBookingbyId(Guid id, string userId)
         {
             var booking=await dbContext.Bookings.FirstOrDefaultAsync(e => e.Id == id);
-            var tickets = booking.NoOfTickets;
-            var eventid = booking.EventId;
-            dbContext.Bookings.Remove(booking);
+            if (booking == null) 
+            {
+                return (null, "Booking doesn't exist", false);
+            }
+            if (userId == booking.UsersId)
+            {
+                var tickets = booking.NoOfTickets;
+                var eventid = booking.EventId;
+                dbContext.Bookings.Remove(booking);
 
-            //Increasing Number of Available Event Tickets
-            
-            var eventBooked=await dbContext.Events.FirstOrDefaultAsync(x => x.Id == eventid);
-            eventBooked.TicketsAvailable  = eventBooked.TicketsAvailable+tickets; 
+                //Increasing Number of Available Event Tickets
 
-            dbContext.SaveChangesAsync();
-            return booking;
+                var eventBooked = await dbContext.Events.FirstOrDefaultAsync(x => x.Id == eventid);
+                eventBooked.TicketsAvailable = eventBooked.TicketsAvailable + tickets;
+
+                dbContext.SaveChangesAsync();
+                return (booking,"Booking deleted Successfully",true);
+            }
+            else
+            {
+                return (null,"Trying to delete someone's else booking", false);
+            }
         }
 
         public async Task<IEnumerable<Booking>> ShowBookingsbyUserId(string id)

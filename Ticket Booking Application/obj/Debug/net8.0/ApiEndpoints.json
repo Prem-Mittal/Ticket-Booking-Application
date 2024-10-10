@@ -108,7 +108,7 @@
   {
     "ContainingType": "Ticket_Booking_Application.Controllers.EventController",
     "Method": "UpdateEvent",
-    "RelativePath": "api/Event/UpdateEvent/{id}",
+    "RelativePath": "api/Event/UpdateEvent/{userId}/{id}",
     "HttpMethod": "PUT",
     "IsController": true,
     "Order": 0,
@@ -121,6 +121,11 @@
       {
         "Name": "id",
         "Type": "System.Guid",
+        "IsRequired": true
+      },
+      {
+        "Name": "userId",
+        "Type": "System.String",
         "IsRequired": true
       }
     ],

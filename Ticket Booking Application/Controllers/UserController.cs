@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using Ticket_Booking_Application.Models.Domain;
 using Ticket_Booking_Application.Models.DTOs;
 using Ticket_Booking_Application.Repository.Interfaces;
@@ -15,14 +17,14 @@ namespace Ticket_Booking_Application.Controllers
         private readonly UserManager<Users> userManager;
         private readonly ITokenRepo tokenRepo;
         private readonly IMapper mapper;
-        
+        private readonly IHttpContextAccessor httpContextAccessor;
 
-        public UserController(UserManager<Users> userManager, ITokenRepo tokenRepo, IMapper mapper)
+        public UserController(UserManager<Users> userManager, ITokenRepo tokenRepo, IMapper mapper, IHttpContextAccessor httpContextAccessor)
         {
             this.userManager = userManager;
             this.tokenRepo = tokenRepo;
             this.mapper = mapper;
-            
+            this.httpContextAccessor = httpContextAccessor;
         }
 
         //Controller for registering the user
@@ -49,12 +51,15 @@ namespace Ticket_Booking_Application.Controllers
 
             if (result.Succeeded)
             {
-                return Ok("User Crested Successfully");
+                return Ok(new { Message = "User Created Successfully" });
             }
             else
             {
-                return BadRequest(result.Errors);
+                // Create a structured error message
+                var errorMessage = string.Join(", ", result.Errors.Select(e => e.Description));
+                return BadRequest(new { Message = "User creation failed: " + errorMessage });
             }
+
         }
 
         //Controller for logging in the user
@@ -72,25 +77,29 @@ namespace Ticket_Booking_Application.Controllers
                 var checkPasswordResult = await userManager.CheckPasswordAsync(user, loginrequestDto.Password);
                 if (checkPasswordResult)
                 {
-                        var jwtToken = tokenRepo.CreateJwtToken(user);
-                        var response = new LoginResponseDto
-                        {
-                            Id = user.Id,
-                            JwtToken = jwtToken,
-                            Username = user.UserName,
-                            FirstName = user.FirstName,
-                            LastName= user.LastName,
-                            PhoneNumber=user.PhoneNumber,
-                            Address = user.Address
-                        };
-                        return Ok(new
-                        {
-                            Message = "User Logged In",
-                            Result = response
-                        });
+                    var jwtToken = tokenRepo.CreateJwtToken(user);
+                    var response = new LoginResponseDto
+                    {
+                        Id = user.Id,
+                        JwtToken = jwtToken,
+                        Username = user.UserName,
+                        FirstName = user.FirstName,
+                        LastName = user.LastName,
+                        PhoneNumber = user.PhoneNumber,
+                        Address = user.Address
+                    };
+                    return Ok(new
+                    {
+                        Message = "User Logged In",
+                        Result = response
+                    });
+                }
+                else
+                {
+                    return BadRequest(new { Message="Password Incorrect" });
                 }
             }
-            return BadRequest("User not registered");
+            return BadRequest(new { Message = "User Does not Exist" });
         }
 
         //Controller for Updating the user
@@ -103,69 +112,88 @@ namespace Ticket_Booking_Application.Controllers
             {
                 return BadRequest(ModelState);
             }
-            var user= await userManager.FindByIdAsync(id);
-            if (user != null) 
+            var userId = httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userId == id)
             {
-                if (updateUserDto.Address != user.Address)
-                    user.Address = updateUserDto.Address;
-                if (updateUserDto.FirstName != user.FirstName)
-                    user.FirstName = updateUserDto.FirstName;
-                if (updateUserDto.LastName != user.LastName)
-                    user.LastName = updateUserDto.LastName;
-                if (updateUserDto.PhoneNumber != user.PhoneNumber)
-                    user.PhoneNumber = updateUserDto.PhoneNumber;
-                var result= await userManager.UpdateAsync(user);
-                if (result.Succeeded)
+                var user = await userManager.FindByIdAsync(id);
+
+                if (user != null)
                 {
-                    return Ok(new
+                    if (updateUserDto.Address != user.Address)
+                        user.Address = updateUserDto.Address;
+                    if (updateUserDto.FirstName != user.FirstName)
+                        user.FirstName = updateUserDto.FirstName;
+                    if (updateUserDto.LastName != user.LastName)
+                        user.LastName = updateUserDto.LastName;
+                    if (updateUserDto.PhoneNumber != user.PhoneNumber)
+                        user.PhoneNumber = updateUserDto.PhoneNumber;
+                    var result = await userManager.UpdateAsync(user);
+                    if (result.Succeeded)
                     {
-                        Message = "User Updated",
-                        Result = mapper.Map<UserDto>(user)
-                    });
+                        return Ok(new
+                        {
+                            Message = "User Updated",
+                            Result = mapper.Map<UserDto>(user)
+                        });
+                    }
+                    else
+                    {
+                        // Return a bad request if the update failed
+                        var errorMessage = string.Join(", ", result.Errors.Select(e => e.Description));
+                        return BadRequest(new { Message = "User Updation failed: " + errorMessage });
+                    }
                 }
-                else
-                {
-                    // Return a bad request if the update failed
-                    return BadRequest(result.Errors);
-                }
+                return NotFound(new { Message = $"User with ID {id} not found." });
             }
-            return NotFound(new { Message = $"User with ID {id} not found." });
+            else
+            {
+                return NotFound(new { Message= "Trying to access someone else credentials" });
+            }
+            
         }
 
+        //Controller for changing Password
         [HttpPost]
         [Route("ChangePassword/{id}")]
         [Authorize]
         public async Task<IActionResult> ChangePassword(string id, ChangePasswordDto model)
-            {
+        {
                 if (!ModelState.IsValid)
                 {
                     return BadRequest(ModelState);
                 }
-
-                // Get the currently logged-in user
-                var user = await userManager.FindByIdAsync(id);
-
-                if (user == null)
+                var userId = httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                if (userId == id)
                 {
-                    return NotFound("User not found.");
-                }
+                    // Get the currently logged-in user
+                    var user = await userManager.FindByIdAsync(id);
 
-                // Change the password using the UserManager service
-                var result = await userManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
-                result = await userManager.UpdateAsync(user);
-                if (result.Succeeded)
+                    if (user == null)
+                    {
+                        return NotFound(new { Message="User Not Found"});
+                    }
+
+                    // Change the password using the UserManager service
+                    var result = await userManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
+                    if (!result.Succeeded) // Check if the password change succeeded
+                    {
+                        // Create a structured error message
+                        var errorMessage = string.Join(", ", result.Errors.Select(e => e.Description));
+                        return BadRequest(new { Message = "Failed to change password: " + errorMessage });
+                    }
+                    result = await userManager.UpdateAsync(user);
+                    if (result.Succeeded)
+                    {
+                        return Ok(new { Message= "Password changed successfully."});
+                    }
+                    var Message = string.Join(", ", result.Errors.Select(e => e.Description));
+                    return BadRequest(new { Message = "Failed to update user: " + Message });
+                }
+                else
                 {
-                    return Ok("Password changed successfully.");
-                }
-
-                // If the operation fails, return the errors
-                foreach (var error in result.Errors)
-                {
-                    ModelState.AddModelError("", error.Description);
-                }
-
-                return BadRequest(ModelState);
-            }
+                    return NotFound(new {Message= "Trying to access unauthorized User"});
+                } 
+        }
 
     }
 }

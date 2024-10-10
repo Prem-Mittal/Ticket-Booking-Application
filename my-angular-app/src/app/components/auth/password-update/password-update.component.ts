@@ -36,7 +36,7 @@ export class PasswordUpdateComponent implements OnInit{
       this.updatePasswordSubscription=this.userService.updatePassword(this.userId,this.model)
       .subscribe({
         next:(response)=>{
-          console.log("this was successful");
+          console.log(response.message);
           this.router.navigateByUrl('/profile')
         }
       })

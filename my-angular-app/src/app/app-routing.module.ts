@@ -48,7 +48,7 @@ const routes: Routes = [
     canActivate:[authGuardGuard]
   },
   {
-    path:'update-event/:id',
+    path:'update-event/:id/:userId',
     component:UpdateEventComponent,
     canActivate:[authGuardGuard]
   }

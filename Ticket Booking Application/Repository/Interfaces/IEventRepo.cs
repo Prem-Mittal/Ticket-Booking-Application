@@ -10,7 +10,7 @@ namespace Ticket_Booking_Application.Repository.Interfaces
         Task<IEnumerable<Event>> ShowEventsAsync();
         Task<IEnumerable<Event?>> ShowEventsByUserId(string id);
         Task<Event?> UpdateEventAsync(Guid id , Event request);
-        Task<Event?> DeleteEvent(Guid id);
+        Task<(Event createdEvent, string message, bool isSuccess)> DeleteEvent(Guid id, string userId);
         
 
 

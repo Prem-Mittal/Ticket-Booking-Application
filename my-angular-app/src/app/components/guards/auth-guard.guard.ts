@@ -9,7 +9,7 @@ export const authGuardGuard: CanActivateFn = (route:ActivatedRouteSnapshot, stat
   const user: User | undefined = userService.getuser(); 
   const session: boolean = !user;
 
-  const protectedRoutes: string[]=['/profile','/update-password/:id','/update-event/:id','/booking/:eventId/:price','/create-event'];
+  const protectedRoutes: string[]=['/profile','/update-password/:id','/update-event/:id/:userId','/booking/:eventId/:price','/create-event'];
   return protectedRoutes.includes(state.url)&& session ? router.navigate(['/login']):true;
   
 };

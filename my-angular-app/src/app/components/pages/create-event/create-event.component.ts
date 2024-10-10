@@ -44,7 +44,7 @@ export class CreateEventComponent implements OnDestroy, OnInit {
     this.addEventSubscription = this.eventService.addEvent(this.model)
       .subscribe({
         next: (response) => {
-          console.log("This was successful");
+          console.log(response.message);
           this.router.navigateByUrl('/');
         }
       });

@@ -25,7 +25,8 @@ export class LoginComponent implements OnDestroy {
     this.loginUserSubscription = this.userService.loginUser(this.model)
     .subscribe({
         next: (response) => {
-            console.log("This was successful");
+          if(response.message==="User Logged In"){
+            console.log(response.message);
             this.cookieService.set('Authorization', `Bearer ${response.result.jwtToken}`, undefined, '/', undefined, true, 'Strict');
             this.userService.setUser({
                 email: response.result.username,
@@ -36,6 +37,10 @@ export class LoginComponent implements OnDestroy {
                 id: response.result.id
             });
             this.router.navigateByUrl('/');
+          }
+          else{
+            console.log(response.message);
+          } 
         },
         error: (err) => {
             console.error("Login failed", err);

@@ -7,7 +7,7 @@ namespace Ticket_Booking_Application.Repository.Interfaces
     {
         public Task<(Booking booking, string message, bool isSuccess)> CreateBooking(Booking booking);
         public Task<IEnumerable<Booking>>ShowBookingsbyUserId(string id);
-        public Task<Booking> DeleteBookingbyId(Guid id);
+        public Task<(Booking booking, string message, bool isSuccess)> DeleteBookingbyId(Guid id, string userId);
 
     }
 }
