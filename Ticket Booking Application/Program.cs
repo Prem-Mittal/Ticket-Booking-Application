@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Ticket_Booking_Application.Data;
@@ -8,6 +9,7 @@ using Ticket_Booking_Application.Mappings;
 using Ticket_Booking_Application.Models.Domain;
 using Ticket_Booking_Application.Repository.Implementation;
 using Ticket_Booking_Application.Repository.Interfaces;
+using Ticket_Booking_Application.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,12 +19,19 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+//builder.Services.AddTransient<IEmailSender, AuthMessageSender>();
+//builder.Services.AddTransient<ISmsSender, AuthMessageSender>();
+//builder.Services.Configure<SmsOption>(Configuration);
+
 builder.Services.AddHttpContextAccessor();
+
 builder.Services.AddIdentityCore<Users>()
     .AddRoles<IdentityRole>()
     .AddTokenProvider<DataProtectorTokenProvider<Users>>("TicketBooking")
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
+
 builder.Services.Configure<IdentityOptions>(options =>
     {
         options.Password.RequireDigit = false;
