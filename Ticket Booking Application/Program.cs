@@ -20,9 +20,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-//builder.Services.AddTransient<IEmailSender, AuthMessageSender>();
-//builder.Services.AddTransient<ISmsSender, AuthMessageSender>();
-//builder.Services.Configure<SmsOption>(Configuration);
+//faltu hata diya
 
 builder.Services.AddHttpContextAccessor();
 
